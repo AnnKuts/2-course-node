@@ -1,0 +1,1 @@
+console.log("Hello world! ©Mariia Khorunzha IM-42")
