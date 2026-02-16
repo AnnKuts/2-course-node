@@ -15,3 +15,5 @@ function MarikApp() {
 
 MarikApp();
 
+// not every wrapper is a decorator, but every decorator is a wrapper
+console.log("Hello, world! ©Mariia Khorunzha");
