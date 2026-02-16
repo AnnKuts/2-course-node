@@ -138,5 +138,6 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-# Local IDEs and editors
+# Local IDEs, OS and editors
 .idea
+.DS_Store
