@@ -20,3 +20,6 @@ console.log("Hello, world! ©Mariia Khorunzha");
 
 // Hello world
 console.log('What on earth is going on here, by Loban Mykhailo');
+
+// ThAtS "hello world" FoR YoU 
+console.log('Hello, world by Makarevych Bogdan'); 
