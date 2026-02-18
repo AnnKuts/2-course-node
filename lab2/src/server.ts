@@ -10,6 +10,10 @@ app.get('/', (req: Request, res: Response) => {
     res.send('<h1>hello</h1>');
 });
 
+app.get('/team', (req: Request, res: Response) => {
+    res.render('team', { team });
+});
+
 app.get('/team/:slug', (req: Request, res: Response) => {
     const requestSlug = req.params.slug;
     const student = team.find(student => student.slug === requestSlug);
