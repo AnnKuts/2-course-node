@@ -1,0 +1,26 @@
+@import url('../styles.css');
+
+.team-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+}
+.team-member {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  color: #0969da;
+  text-decoration: none;
+}
+.team-member img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.team-member:hover {
+  text-decoration: underline;
+}
