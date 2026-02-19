@@ -5,9 +5,11 @@ const app = express();
 const PORT = 3000;
 
 app.set('view engine', 'ejs');
+app.use(express.static('views'));
+app.use('/assets', express.static('assets'));
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('<h1>hello</h1>');
+    res.redirect('/main.html');
 });
 
 app.get('/team', (req: Request, res: Response) => {

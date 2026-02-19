@@ -6,13 +6,13 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>
-        Student name: <%= student.fullName %><br>
-        Slug: <%= student.slug %><br>
-        Image: <img src="<%= student.imagePath %>" alt="<%= student.fullName %>" width="100"><br>
-        Bio: <%= student.bio %><br>
-        Social link: <a href="<%= student.socialLink %>" target="_blank"><%= student.socialLink %></a><br>
-        Favourite db: <%= student.favouriteDb %>
-    </h1>
+    <h1>Student: <%= student.fullName %></h1>
+    <p><strong>Slug:</strong> <%= student.slug %></p>
+    <div>
+        <img src="<%= student.imagePath %>" alt="<%= student.fullName %>" width="150">
+    </div>
+    <p><strong>Bio:</strong> <%= student.bio %></p>
+    <p><strong>Social link:</strong> <a href="<%= student.socialLink %>" target="_blank"><%= student.socialLink %></a></p>
+    <p><strong>Favourite DB:</strong> <%= student.favouriteDb %></p>
 </body>
 </html>
