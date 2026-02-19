@@ -14,5 +14,9 @@
     <p><strong>Bio:</strong> <%= student.bio %></p>
     <p><strong>Social link:</strong> <a href="<%= student.socialLink %>" target="_blank"><%= student.socialLink %></a></p>
     <p><strong>Favourite DB:</strong> <%= student.favouriteDb %></p>
+    <p><strong>Technologies:</strong> <span><%= student.technologies?.length ? student.technologies.join(', ') : '—' %></span></p>
+    <p><strong>Hobbies:</strong> <span><%= student.hobbies?.length ? student.hobbies.join(', ') : '—' %></span></p>
+    <p><strong>Favorite Quote:</strong> <span><%= student.favoriteQuote ? student.favoriteQuote : '—' %></span></p>
+    <p><strong>Favorite Movie:</strong> <span><%= student.favoriteMovie ? student.favoriteMovie : '—' %></span></p>
 </body>
 </html>
