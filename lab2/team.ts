@@ -36,7 +36,7 @@ export const team: Student[] = [
         favoriteMovie: "",
         socialLink: "https://www.linkedin.com/in/mykhailo-loban-a6a10a383/"
     },
-        {
+    {
         slug: "khorunzha",
         fullName: "Mariia Khorunzha",
         imagePath: "/assets/clem.png",
@@ -47,5 +47,17 @@ export const team: Student[] = [
         favoriteQuote: "not every wrapper is a decorator, but every decorator is a wrapper",
         favoriteMovie: "Before i fall",
         socialLink: "https://www.linkedin.com/in/mariia-khorunzha-93072b336/"
-    }
+    },
+    {
+        slug: "makarevych",
+        fullName: "Bogdan Makarevych",
+        imagePath: "/assets/hedgehog.png",
+        bio: "An FIOT student.",
+        favouriteDb: "MariaDB",
+        technologies: ["React", "Node.js", "Go", "Dart", "Flutter", "MariaDB", "Jest", "Docker", "Postman", "Figma"],
+        hobbies: ["Videogames", "Coding", "Flaneur"],
+        favoriteQuote: "viva la vida",
+        favoriteMovie: "The Shawshank Redemption",
+        socialLink: "https://www.linkedin.com/in/bogdan-makarevych-ab43ab321/"
+    },
 ];
