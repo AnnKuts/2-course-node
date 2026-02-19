@@ -7,7 +7,7 @@ body {
 }
 
 .main-container {
-  max-width: 520px;
+  width: fit-content;
   margin: 3em auto 0 auto;
   background: #fff;
   padding: 2.5em 2em 2em 2em;
