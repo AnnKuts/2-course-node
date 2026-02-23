@@ -4,9 +4,9 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-  "dev": "nodemon --exec tsx src/server.ts",
-  "start": "tsx src/server.ts"
-},
+    "dev": "nodemon --exec tsx src/server.ts",
+    "start": "tsx src/server.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -60,4 +60,16 @@ export const team: Student[] = [
         favoriteMovie: "The Shawshank Redemption",
         socialLink: "https://www.linkedin.com/in/bogdan-makarevych-ab43ab321/"
     },
+  {
+    slug: "kuts",
+    fullName: "Anna Kuts",
+    imagePath: "/assets/fluttershy.png",
+    bio: "FICE student and passionate product oriented developer",
+    favouriteDb: "PostgreSQL",
+    technologies: ["JS/TS", "React", "Git", "CSS/HTML", "Node.js", "SvelteKit", "SQL", "NoSQL", "Bash", "Linux", "Docker", "Postman", "Figma", "Canva", "ClickUp", "Notion", "Agile"],
+    hobbies: ["Design", "Volunteering", "Travelling"],
+    favoriteQuote: "Never lose. Only win or learn",
+    favoriteMovie: "The Secretary",
+    socialLink: "https://www.linkedin.com/in/anna-kuts-b0ab1a2b7"
+  }
 ];
