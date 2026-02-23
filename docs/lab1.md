@@ -35,17 +35,38 @@
 - Each student verified the installation by running commands in the terminal
 - A simple console application was created to print "Hello, World!" to the console
 
-Fedorenko Ivan:
-![Fedorenko](../lab1/assets/fedorenko.png)
-Khorunzha Mariia:
-![Khorunzha](../lab1/assets/khorunzha.png)
-Kuts Anna:
-![Kuts](../lab1/assets/kuts.png)
-Loban Mykhailo:
-![Loban](../lab1/assets/loban.png)
-Makarevych Bohdan:
-![Makarevych](../lab1/assets/makarevych.png)
+### Fedorenko Ivan
+<p align="center">
+  <img src="../lab1/assets/fedorenko.png" width="700">
+</p>
+
 ---
+
+### Khorunzha Mariia
+<p align="center">
+  <img src="../lab1/assets/khorunzha.png" width="700">
+</p>
+
+---
+
+### Kuts Anna
+<p align="center">
+  <img src="../lab1/assets/kuts.png" width="700">
+</p>
+
+---
+
+### Loban Mykhailo
+<p align="center">
+  <img src="../lab1/assets/loban.png" width="700">
+</p>
+
+---
+
+### Makarevych Bohdan
+<p align="center">
+  <img src="../lab1/assets/makarevych.png" width="700">
+</p>
 
 ## Conclusion
 
