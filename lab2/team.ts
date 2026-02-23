@@ -18,10 +18,10 @@ export const team: Student[] = [
         imagePath: "/assets/gustavo.jpg",
         bio: "A passionate software developer.",
         favouriteDb: "PostgreSQL",
-        technologies: [],
-        hobbies: [],
-        favoriteQuote: "",
-        favoriteMovie: "",
+        technologies: ["React", "Angular", "Node.js", "PostgreSQL", "Python", "Gitlab"],
+        hobbies: ["Bicycles", "Fantasy", "Cooking"],
+        favoriteQuote: "The band members might change, but the song remains the same.",
+        favoriteMovie: "The Hobbit: The Desolation of Smaug",
         socialLink: "https://www.linkedin.com/in/fedorenkoivan/"
     },
     {
