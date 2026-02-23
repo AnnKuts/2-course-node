@@ -5,8 +5,6 @@
 ## Table of Contents
 
 1. [Work Progress](#work-progress)
-    - [Installing Node.js](#1-installing-nodejs)
-    - [Verifying the Installation + Installing an IDE + Creating a Console Application](#2-verifying-the-installation--installing-an-ide--creating-a-console-application)
 2. [Conclusion](#conclusion)
 3. [Control Questions](#control-questions)
     1. [Relationship between Chromium, Google Chrome, and Node.js](#1-what-is-the-relationship-between-chromium-google-chrome-and-nodejs)
@@ -204,4 +202,3 @@ A Garbage Collector automatically frees memory that is no longer used by the app
 * Parallel execution
 * Better for CPU-intensive tasks
 
----
