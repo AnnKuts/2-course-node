@@ -30,10 +30,10 @@ export const team: Student[] = [
         imagePath: "/assets/gustavo.jpg",
         bio: "A ruthless businessman.",
         favouriteDb: "MongoDB",
-        technologies: [],
-        hobbies: [],
-        favoriteQuote: "",
-        favoriteMovie: "",
+        technologies: ["React", "Fastify", "Node.js", "PostgreSQL", "Python", "MongoDB", "Next.js"],
+        hobbies: ["Football", "Chess", "Coding", "Gym"],
+        favoriteQuote: "Maybe it's the friends we made along the way",
+        favoriteMovie: "Interstellar or Inception",
         socialLink: "https://www.linkedin.com/in/mykhailo-loban-a6a10a383/"
     },
     {
