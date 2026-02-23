@@ -3,16 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="/styles/index/index.css">
+    <title><%= student.fullName %></title>
 </head>
 <body>
-    <h1>Student: <%= student.fullName %></h1>
-    <p><strong>Slug:</strong> <%= student.slug %></p>
-    <div>
-        <img src="<%= student.imagePath %>" alt="<%= student.fullName %>" width="150">
+    <div class="main-container student-profile">
+        <div class="student-header">
+            <img src="<%= student.imagePath %>" alt="<%= student.fullName %>" width="150" class="student-photo">
+            <div>
+                <h1><%= student.fullName %></h1>
+                <a href="<%= student.socialLink %>" class="social-link"><p> Social link</p></a>
+            </div>
+        </div>
+        <p><strong>Slug:</strong> <%= student.slug %></p>
+        <p><strong>Bio:</strong> <%= student.bio %></p>
+        <p><strong>Favourite DB:</strong> <%= student.favouriteDb %></p>
+        <p><strong>Technologies:</strong> <span><%= student.technologies?.length ? student.technologies.join(', ') : '—' %></span></p>
+        <p><strong>Hobbies:</strong> <span><%= student.hobbies?.length ? student.hobbies.join(', ') : '—' %></span></p>
+        <p><strong>Favorite Quote:</strong> <span><%= student.favoriteQuote ? student.favoriteQuote : '—' %></span></p>
+        <p><strong>Favorite Movie:</strong> <span><%= student.favoriteMovie ? student.favoriteMovie : '—' %></span></p>
+        <nav>
+            <ul>
+                <li><a href="/team">← Back to team</a></li>
+            </ul>
+        </nav>
     </div>
-    <p><strong>Bio:</strong> <%= student.bio %></p>
-    <p><strong>Social link:</strong> <a href="<%= student.socialLink %>" target="_blank"><%= student.socialLink %></a></p>
-    <p><strong>Favourite DB:</strong> <%= student.favouriteDb %></p>
 </body>
 </html>

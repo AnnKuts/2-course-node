@@ -3,16 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/team/team.css">
     <title>Team page</title>
 </head>
 <body>
-    <h1>Team Page</h1>
-    <ul>
-        <% team.forEach(student => { %>
-            <li>
-                <a href="/team/<%= student.slug %>"><%= student.fullName %></a>
-            </li>
-        <% }) %>
-    </ul>
+    <div class="main-container">
+        <h1>Team Page</h1>
+        <ul class="team-list">
+            <% team.forEach(student => { %>
+                <li>
+                    <a href="/team/<%= student.slug %>" class="team-member">
+                        <img src="<%= student.imagePath %>" alt="<%= student.fullName %>" width="60">
+                        <span><%= student.fullName %></span>
+                    </a>
+                </li>
+            <% }) %>
+        </ul>
+        <nav>
+            <ul>
+                <li><a href="/">← Main page</a></li>
+            </ul>
+        </nav>
+    </div>
 </body>
 </html>
