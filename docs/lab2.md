@@ -9,19 +9,19 @@
 3. [How to Run the Project](#how-to-run-the-project)
 4. [Conclusion](#conclusion)
 5. [Control Questions](#control-questions)
-    1. [Client-Server Architecture](#1-what-is-client-server-architecture)
-    2. [HTML vs HTTP](#2-what-is-the-difference-between-html-and-http)
-    3. [HTTP vs HTTPS](#3-what-is-the-difference-between-http-and-https)
-    4. [GET vs POST](#4-what-is-the-difference-between-get-and-post-methods)
-    5. [HTTP Headers and Cookies](#5-what-are-http-headers-and-cookies)
-    6. [HTTP Status Codes](#6-why-are-http-status-codes-needed)
-    7. [TCP Port](#7-what-is-a-tcp-port)
-    8. [Why Express](#8-why-is-express-framework-needed)
-    9. [Template Engines](#9-what-are-template-engines-and-why-are-they-needed)
-    10. [Routing](#10-what-is-routing-in-a-web-application)
-    11. [MVC Pattern](#11-explain-mvc-pattern)
-    12. [package.json](#12-what-is-packagejson-used-for)
-    13. [JavaScript Modules](#13-what-are-modules-in-javascript)
+   1. [Client-Server Architecture](#1-what-is-client-server-architecture)
+   2. [HTML vs HTTP](#2-what-is-the-difference-between-html-and-http)
+   3. [HTTP vs HTTPS](#3-what-is-the-difference-between-http-and-https)
+   4. [GET vs POST](#4-what-is-the-difference-between-get-and-post-methods)
+   5. [HTTP Headers and Cookies](#5-what-are-http-headers-and-cookies)
+   6. [HTTP Status Codes](#6-why-are-http-status-codes-needed)
+   7. [TCP Port](#7-what-is-a-tcp-port)
+   8. [Why Express](#8-why-is-express-framework-needed)
+   9. [Template Engines](#9-what-are-template-engines-and-why-are-they-needed)
+   10. [Routing](#10-what-is-routing-in-a-web-application)
+   11. [MVC Pattern](#11-explain-mvc-pattern)
+   12. [package.json](#12-what-is-packagejson-used-for)
+   13. [JavaScript Modules](#13-what-are-modules-in-javascript)
 
 ### Project Structure
 
@@ -69,9 +69,9 @@ src/server.ts
 
 The application was configured to:
 
-* Serve static files from the `public` directory
-* Use EJS as a template engine
-* Handle routing for different pages
+- Serve static files from the `public` directory
+- Use EJS as a template engine
+- Handle routing for different pages
 
 ---
 
@@ -81,20 +81,20 @@ The created website includes:
 
 ### Static Page
 
-* `views/main.html`
- 
+- `views/main.html`
+
 ---
 
-###  Dynamic Page (EJS Template)
+### Dynamic Page (EJS Template)
 
-* `views/index.ejs`
-* `views/team.ejs`
+- `views/index.ejs`
+- `views/team.ejs`
 
 Student and team information is rendered dynamically from data.
 
 ---
 
-###  Images
+### Images
 
 Images are stored in:
 
@@ -104,16 +104,16 @@ public/assets/
 
 Examples:
 
-* `clem.png`
-* `fluttershy.png`
-* `gustavo.jpg`
-* `hedgehog.png`
+- `clem.png`
+- `fluttershy.png`
+- `gustavo.jpg`
+- `hedgehog.png`
 
 They are served as static files by Express.
 
 ---
 
-###  Relative Link
+### Relative Link
 
 Example of a relative link inside the website:
 
@@ -125,18 +125,20 @@ This navigates between internal pages.
 
 ---
 
-###  Absolute Link
+### Absolute Link
 
 Each student added an absolute link of their Linkedin as an external resource
 
 ---
 
 ## How to Run the Project
+
 1. Go to the project directory:
 
 ```bash
 cd lab2
 ```
+
 2. Install dependencies:
 
 ```bash
@@ -148,7 +150,6 @@ npm install
 ```bash
 npm run start
 ```
-
 
 4. Open in browser:
 
@@ -178,15 +179,15 @@ Client-server architecture is a model where clients (browsers) send requests to 
 
 ### 2. What is the difference between HTML and HTTP?
 
-* **HTML** is a markup language used to structure web pages.
-* **HTTP** is a protocol used to transfer data between client and server.
+- **HTML** is a markup language used to structure web pages.
+- **HTTP** is a protocol used to transfer data between client and server.
 
 ---
 
 ### 3. What is the difference between HTTP and HTTPS?
 
-* **HTTP** transfers data without encryption.
-* **HTTPS** encrypts data using SSL/TLS, providing secure communication.
+- **HTTP** transfers data without encryption.
+- **HTTPS** encrypts data using SSL/TLS, providing secure communication.
 
 ---
 
@@ -194,22 +195,22 @@ Client-server architecture is a model where clients (browsers) send requests to 
 
 **GET:**
 
-* Used to retrieve data
-* Data is sent via URL
-* Can be cached
+- Used to retrieve data
+- Data is sent via URL
+- Can be cached
 
 **POST:**
 
-* Used to send data to the server
-* Data is sent in the request body
-* More secure for sensitive data
+- Used to send data to the server
+- Data is sent in the request body
+- More secure for sensitive data
 
 ---
 
 ### 5. What are HTTP headers and cookies?
 
-* **HTTP headers** contain metadata about requests and responses.
-* **Cookies** are small pieces of data stored on the client side.
+- **HTTP headers** contain metadata about requests and responses.
+- **Cookies** are small pieces of data stored on the client side.
 
 Both are used to exchange additional information between client and server.
 
@@ -231,10 +232,10 @@ A TCP port is a communication endpoint used by applications to exchange data ove
 
 Express simplifies:
 
-* Routing
-* Middleware handling
-* Server setup
-* Request/response processing
+- Routing
+- Middleware handling
+- Server setup
+- Request/response processing
 
 It makes building web applications faster and more structured.
 
@@ -258,9 +259,9 @@ Routers organize route handling logic into modular components.
 
 MVC stands for:
 
-* **Model** – handles data and business logic
-* **View** – handles presentation (UI)
-* **Controller** – handles request logic and connects Model with View
+- **Model** – handles data and business logic
+- **View** – handles presentation (UI)
+- **Controller** – handles request logic and connects Model with View
 
 ---
 
@@ -268,10 +269,10 @@ MVC stands for:
 
 `package.json`:
 
-* Stores project metadata
-* Lists dependencies
-* Defines scripts
-* Manages project configuration
+- Stores project metadata
+- Lists dependencies
+- Defines scripts
+- Manages project configuration
 
 ---
 
@@ -281,6 +282,5 @@ Modules allow splitting code into reusable files.
 
 There are two main systems:
 
-* **CommonJS** (`require`, `module.exports`)
-* **ES Modules** (`import`, `export`)
-
+- **CommonJS** (`require`, `module.exports`)
+- **ES Modules** (`import`, `export`)

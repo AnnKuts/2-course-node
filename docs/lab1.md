@@ -7,17 +7,17 @@
 1. [Work Progress](#work-progress)
 2. [Conclusion](#conclusion)
 3. [Control Questions](#control-questions)
-    1. [Relationship between Chromium, Google Chrome, and Node.js](#1-what-is-the-relationship-between-chromium-google-chrome-and-nodejs)
-    2. [JavaScript in Browser vs Node.js](#2-is-there-a-difference-between-running-javascript-in-the-browser-and-in-nodejs)
-    3. [TypeScript vs JavaScript](#3-how-does-typescript-differ-from-javascript)
-    4. [Cross-Platform Compatibility](#4-what-is-cross-platform-compatibility-are-nodejs-applications-cross-platform)
-    5. [Advantages and Disadvantages of Node.js](#5-advantages-and-disadvantages-of-nodejs)
-    6. [LTS vs Current](#6-what-is-the-difference-between-lts-and-current-versions)
-    7. [Compilation vs Interpretation](#7-advantages-and-disadvantages-of-compilation-vs-interpretation)
-    8. [JIT Compilation](#8-how-does-jit-compilation-differ-from-traditional-compilation)
-    9. [Static vs Dynamic Typing](#9-what-are-static-and-dynamic-typing)
-    10. [Garbage Collector](#10-what-is-the-purpose-of-a-garbage-collector)
-    11. [Asynchrony vs Multithreading](#11-what-is-the-difference-between-asynchrony-and-multithreading)
+   1. [Relationship between Chromium, Google Chrome, and Node.js](#1-what-is-the-relationship-between-chromium-google-chrome-and-nodejs)
+   2. [JavaScript in Browser vs Node.js](#2-is-there-a-difference-between-running-javascript-in-the-browser-and-in-nodejs)
+   3. [TypeScript vs JavaScript](#3-how-does-typescript-differ-from-javascript)
+   4. [Cross-Platform Compatibility](#4-what-is-cross-platform-compatibility-are-nodejs-applications-cross-platform)
+   5. [Advantages and Disadvantages of Node.js](#5-advantages-and-disadvantages-of-nodejs)
+   6. [LTS vs Current](#6-what-is-the-difference-between-lts-and-current-versions)
+   7. [Compilation vs Interpretation](#7-advantages-and-disadvantages-of-compilation-vs-interpretation)
+   8. [JIT Compilation](#8-how-does-jit-compilation-differ-from-traditional-compilation)
+   9. [Static vs Dynamic Typing](#9-what-are-static-and-dynamic-typing)
+   10. [Garbage Collector](#10-what-is-the-purpose-of-a-garbage-collector)
+   11. [Asynchrony vs Multithreading](#11-what-is-the-difference-between-asynchrony-and-multithreading)
 
 ## Work Progress
 
@@ -30,12 +30,14 @@
 
 ---
 
-### 2.  Verifying the Installation + Installing an IDE + Creating a console application
+### 2. Verifying the Installation + Installing an IDE + Creating a console application
+
 - An Integrated Development Environment (IDE) was installed by each student (primarily VS Code, IntelliJ IDEA).
 - Each student verified the installation by running commands in the terminal
 - A simple console application was created to print "Hello, World!" to the console
 
 ### Fedorenko Ivan
+
 <p align="center">
   <img src="../lab1/assets/fedorenko.png" width="700">
 </p>
@@ -43,6 +45,7 @@
 ---
 
 ### Khorunzha Mariia
+
 <p align="center">
   <img src="../lab1/assets/khorunzha.png" width="700">
 </p>
@@ -50,6 +53,7 @@
 ---
 
 ### Kuts Anna
+
 <p align="center">
   <img src="../lab1/assets/kuts.png" width="700">
 </p>
@@ -57,6 +61,7 @@
 ---
 
 ### Loban Mykhailo
+
 <p align="center">
   <img src="../lab1/assets/loban.png" width="700">
 </p>
@@ -64,6 +69,7 @@
 ---
 
 ### Makarevych Bohdan
+
 <p align="center">
   <img src="../lab1/assets/makarevych.png" width="700">
 </p>
@@ -80,9 +86,9 @@ During this laboratory work, Node.js was successfully installed and configured. 
 
 ### 1. What is the relationship between Chromium, Google Chrome, and Node.js?
 
-* **Chromium** is an open-source web browser project.
-* **Google Chrome** is a browser built on Chromium.
-* **Node.js** uses the **V8 JavaScript engine**, which was originally developed for Google Chrome.
+- **Chromium** is an open-source web browser project.
+- **Google Chrome** is a browser built on Chromium.
+- **Node.js** uses the **V8 JavaScript engine**, which was originally developed for Google Chrome.
 
 Both Chrome and Node.js use the same V8 engine to execute JavaScript code.
 
@@ -94,16 +100,16 @@ Yes.
 
 In the browser:
 
-* Access to the DOM
-* `window` object is available
-* Designed for client-side applications
+- Access to the DOM
+- `window` object is available
+- Designed for client-side applications
 
 In Node.js:
 
-* No DOM
-* Access to the file system
-* Uses the `global` object
-* Designed mainly for server-side development
+- No DOM
+- Access to the file system
+- Uses the `global` object
+- Designed mainly for server-side development
 
 ---
 
@@ -111,14 +117,14 @@ In Node.js:
 
 **TypeScript:**
 
-* Statically typed
-* Supports interfaces and advanced type features
-* Compiles to JavaScript
+- Statically typed
+- Supports interfaces and advanced type features
+- Compiles to JavaScript
 
 **JavaScript:**
 
-* Dynamically typed
-* Runs directly without a compilation step
+- Dynamically typed
+- Runs directly without a compilation step
 
 ---
 
@@ -134,23 +140,23 @@ Node.js applications are cross-platform (Windows, Linux, macOS).
 
 **Advantages:**
 
-* High performance (V8 engine)
-* Asynchronous and non-blocking I/O
-* Large npm ecosystem
-* Same language for frontend and backend
+- High performance (V8 engine)
+- Asynchronous and non-blocking I/O
+- Large npm ecosystem
+- Same language for frontend and backend
 
 **Disadvantages:**
 
-* Single-threaded event loop model
-* Not ideal for CPU-intensive tasks
-* Callback complexity (if not properly structured)
+- Single-threaded event loop model
+- Not ideal for CPU-intensive tasks
+- Callback complexity (if not properly structured)
 
 ---
 
 ### 6. What is the difference between LTS and Current versions?
 
-* **LTS (Long-Term Support)** – stable version recommended for production.
-* **Current** – latest version with newest features, but less tested.
+- **LTS (Long-Term Support)** – stable version recommended for production.
+- **Current** – latest version with newest features, but less tested.
 
 ---
 
@@ -158,17 +164,17 @@ Node.js applications are cross-platform (Windows, Linux, macOS).
 
 **Compilation:**
 
-* Faster execution
-* Code optimization
+- Faster execution
+- Code optimization
 
-- Requires a build step
+* Requires a build step
 
 **Interpretation:**
 
-* Immediate execution
-* Easier debugging
+- Immediate execution
+- Easier debugging
 
-- Slower performance
+* Slower performance
 
 ---
 
@@ -176,12 +182,12 @@ Node.js applications are cross-platform (Windows, Linux, macOS).
 
 **JIT (Just-In-Time) compilation:**
 
-* Compiles code during execution
-* Used in the V8 engine
+- Compiles code during execution
+- Used in the V8 engine
 
 **Traditional compilation:**
 
-* Compiles code before execution
+- Compiles code before execution
 
 ---
 
@@ -189,17 +195,17 @@ Node.js applications are cross-platform (Windows, Linux, macOS).
 
 **Static typing:**
 
-* Fewer runtime errors
-* Better IDE support
+- Fewer runtime errors
+- Better IDE support
 
-- More verbose code
+* More verbose code
 
 **Dynamic typing:**
 
-* More flexible
-* Less boilerplate
+- More flexible
+- Less boilerplate
 
-- More runtime errors
+* More runtime errors
 
 ---
 
@@ -213,13 +219,12 @@ A Garbage Collector automatically frees memory that is no longer used by the app
 
 **Asynchrony:**
 
-* Single thread
-* Non-blocking operations
-* Efficient for I/O tasks
+- Single thread
+- Non-blocking operations
+- Efficient for I/O tasks
 
 **Multithreading:**
 
-* Multiple threads
-* Parallel execution
-* Better for CPU-intensive tasks
-
+- Multiple threads
+- Parallel execution
+- Better for CPU-intensive tasks
