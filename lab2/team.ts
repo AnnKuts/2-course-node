@@ -3,11 +3,11 @@ interface Student {
   fullName: string;
   imagePath: string;
   bio: string;
-  favouriteDb: string;
-  technologies: string[];
-  hobbies: string[];
-  favoriteQuote: string;
-  favoriteMovie: string;
+  favouriteDb?: string;
+  technologies?: string[];
+  hobbies?: string[];
+  favoriteQuote?: string;
+  favoriteMovie?: string;
   socialLink: string;
 }
 
