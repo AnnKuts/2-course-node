@@ -5,9 +5,7 @@ const app = express();
 const PORT = 3000;
 
 app.set("view engine", "ejs");
-app.use(express.static("views"));
 app.use(express.static("public"));
-app.use("/assets", express.static("assets"));
 
 app.get("/", (req: Request, res: Response) => {
   res.redirect("/main.html");
