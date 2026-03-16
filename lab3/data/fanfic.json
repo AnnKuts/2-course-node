@@ -1,0 +1,12 @@
+[
+  {
+    "fanfic_id": "1",
+    "user_id": "user_42",
+    "title": "Пригоди в світі Node",
+    "description": "Цікава історія про JS",
+    "genre": ["Fantasy"],
+    "restriction": "16+",
+    "rating": 4.8,
+    "reports": 10
+  }
+]
