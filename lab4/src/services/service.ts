@@ -1,7 +1,6 @@
 import { Fanfic } from "../models/fanfic.ts";
-import { getAllSync } from "../repository/repo.ts";
+import { getAll } from "../repository/repo.ts";
 
-export const getAllFanfics = (): (Fanfic[] | []) => {
-    console.log('Service: getAllFanfics called');
-    return getAllSync().filter(fanfic => fanfic.reports < 5);
-}
+export const getAllFanfics = async (): Promise<Fanfic[]> => {
+    return await getAll();
+};
