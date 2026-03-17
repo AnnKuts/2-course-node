@@ -1,36 +1,26 @@
-CREATE TABLE fanfics (
+CREATE TABLE IF NOT EXISTS genres (
+    genre_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TYPE age_restriction AS ENUM (
+    '0+',
+    '12+',
+    '16+',
+    '18+'
+);
+
+CREATE TABLE IF NOT EXISTS fanfics (
     fanfic_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(user_id),
     title TEXT NOT NULL,
     description TEXT,
-    content TEXT,
-    restriction VARCHAR(5),
+    restriction age_restriction DEFAULT '0+',
     rating NUMERIC DEFAULT 0,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE users (
-    user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL,
-    is_admin BOOLEAN DEFAULT false,
-    is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE TABLE reviews (
-    review_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+CREATE TABLE IF NOT EXISTS fanfic_genres (
     fanfic_id UUID REFERENCES fanfics(fanfic_id) ON DELETE CASCADE,
-    user_id UUID REFERENCES users(user_id) ON DELETE SET NULL,
-    comment TEXT,
-    rating INTEGER CHECK (rating >= 1 AND rating <= 5),
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE TABLE favourites (
-    favourite_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
-    fanfic_id UUID REFERENCES fanfics(fanfic_id) ON DELETE CASCADE,
-    UNIQUE(user_id, fanfic_id)
+    genre_id INT REFERENCES genres(genre_id) ON DELETE CASCADE,
+    PRIMARY KEY (fanfic_id, genre_id)
 );
