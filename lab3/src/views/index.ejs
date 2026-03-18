@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title><%= title %></title></head>
+<body>
+    <h1>Останні фанфіки</h1>
+    <% fanfics.forEach(fanfic => { %>
+        <div class="card">
+            <h3><a href="/fanfic/<%= fanfic.fanfics_id %>"><%= fanfic.title %></a></h3>
+            <p><%= fanfic.desc %></p>
+            <span>Rating: <%= fanfic.rating %> | Restriction: <%= fanfic.restriction %></span>
+        </div>
+    <% }) %>
+</body>
+</html>
