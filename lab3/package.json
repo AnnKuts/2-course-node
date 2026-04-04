@@ -11,13 +11,18 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.5.0",
     "tsx": "^4.21.0"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.0",
     "ejs": "^5.0.1",
     "express": "^5.2.1",
-    "fs": "^0.0.1-security"
+    "fs": "^0.0.1-security",
+    "jsonwebtoken": "^9.0.3"
   }
 }
