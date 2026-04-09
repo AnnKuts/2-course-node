@@ -4,9 +4,23 @@
     "user_id": "user_42",
     "title": "Пригоди в світі Node",
     "description": "Цікава історія про JS",
-    "genre": ["Fantasy"],
+    "genre": [
+      "Fantasy"
+    ],
     "restriction": "16+",
     "rating": 4.8,
-    "reports": 2
+    "reports": 2,
+    "content": "## Розділ 1\n\nЦе була звичайна ніч..."
+  },
+  {
+    "fanfic_id": "1775755055312",
+    "user_id": "efeb99e0-0d6a-40c9-badc-1e50c9b445b1",
+    "title": "ВЫФЫВФ",
+    "description": "test descriptionВЫФВЫФВЫФ",
+    "content": "adsdasdasdas\n### TITLEEEE\n## TITLEEEEEEE\n# TITLE!!!!\n\n**bold?**\n\n*italiano por favor*\n\nuhm just simple text\n\n- хто\n- прочитав\n- той\n- помр... СДОХНЕЕЕЕЕЕЕЕТ",
+    "genre": [],
+    "restriction": "18+",
+    "rating": 0,
+    "reports": 0
   }
 ]

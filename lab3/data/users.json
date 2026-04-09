@@ -6,5 +6,13 @@
     "password": "$2b$10$3Td990iolKmP5ze/q4IYz.qw.DI6WvxqDFpNcV0SWhTGICTKwD6kS",
     "is_admin": false,
     "is_active": true
+  },
+  {
+    "user_id": "efeb99e0-0d6a-40c9-badc-1e50c9b445b1",
+    "username": "impelle",
+    "email": "marihor2006@gmail.com",
+    "password": "$2b$10$oE/mbpXzzZn80HejJNGYCuliD66JUv1SoYMzQZPntO2dIcv/9RSPO",
+    "is_admin": false,
+    "is_active": true
   }
 ]
