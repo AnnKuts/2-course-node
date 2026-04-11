@@ -1,0 +1,23 @@
+[
+  {
+    "review_id": "rev_001",
+    "pub_id": "mock_001",
+    "user_id": "efeb99e0-0d6a-40c9-badc-1e50c9b445b1",
+    "comment": "Захоплюючий сюжет, не міг відірватися до ранку!",
+    "rating": 5
+  },
+  {
+    "review_id": "rev_002",
+    "pub_id": "mock_001",
+    "user_id": "user_42",
+    "comment": "Цікава ідея з git-репозиторієм, але кінцівка передбачувана.",
+    "rating": 4
+  },
+  {
+    "review_id": "rev_003",
+    "pub_id": "mock_001",
+    "user_id": "user_mock",
+    "comment": "Технічні деталі на висоті, відчувається що автор знає тему.",
+    "rating": 5
+  }
+]

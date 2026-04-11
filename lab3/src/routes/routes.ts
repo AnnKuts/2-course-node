@@ -2,6 +2,12 @@ import express from 'express';
 const router = express.Router();
 import { getAllFanficsController, editorController, saveController } from '../controllers/fanficController.ts';
 import { loginController, meController, registerController } from '../controllers/authController.ts';
+import {
+    getReviewsByPubController,
+    createReviewController,
+    updateReviewController,
+    deleteReviewController,
+} from '../controllers/reviewController.ts';
 import { authenticateToken } from '../middleware/authMiddleware.ts';
 
 router.get('/', getAllFanficsController);
@@ -13,5 +19,10 @@ router.get('/fanfic/editor', editorController);
 router.get('/fanfic/editor/:id', editorController);
 router.post('/fanfic', authenticateToken, saveController);
 router.put('/fanfic/:id', authenticateToken, saveController);
+
+router.get('/review/:pub_id', getReviewsByPubController);
+router.post('/review', authenticateToken, createReviewController);
+router.put('/review/:id', authenticateToken, updateReviewController);
+router.delete('/review/:id', authenticateToken, deleteReviewController);
 
 export default router;
