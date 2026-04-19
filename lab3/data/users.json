@@ -1,0 +1,10 @@
+[
+  {
+    "user_id": "84347609-bae5-48ba-a605-2cd980491f7e",
+    "username": "milo",
+    "email": "milo@example.com",
+    "password": "$2b$10$3Td990iolKmP5ze/q4IYz.qw.DI6WvxqDFpNcV0SWhTGICTKwD6kS",
+    "is_admin": false,
+    "is_active": true
+  }
+]
