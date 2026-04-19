@@ -9,7 +9,9 @@
     <div class="container">
         <div class="editor">
             <div class="meta">
-                <input type="text" id="userId" placeholder="Author ID" value="<%= fanfic.user_id || '' %>" readonly disabled>
+                <% if (fanfic.fanfic_id) { %>
+                <input type="hidden" id="fanficId" value="<%= fanfic.fanfic_id %>">
+                <% } %>
                 <input type="text" id="title" value="<%= fanfic.title %>" placeholder="Title">
                 <input type="text" id="desc" value="<%= fanfic.description %>" placeholder="Description">
                 <select id="genre">
@@ -65,8 +67,8 @@
                 return;
             }
             
-            const fanficId = (typeof fanfic !== 'undefined' && fanfic.fanfic_id) ? fanfic.fanfic_id : null;
-            
+            const fanficIdInput = document.getElementById('fanficId');
+            const fanficId = fanficIdInput ? fanficIdInput.value : null;
             const isUpdate = !!fanficId;
             const method = isUpdate ? 'PUT' : 'POST';
             const url = isUpdate ? `/fanfic/${fanficId}` : '/fanfic';

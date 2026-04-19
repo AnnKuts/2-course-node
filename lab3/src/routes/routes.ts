@@ -9,9 +9,9 @@ router.post('/auth/register', registerController);
 router.post('/auth/login', loginController);
 router.get('/auth/me', authenticateToken, meController);
 
-
-router.post('/fanfic/editor', authenticateToken, saveController);
-router.get('/fanfic/editor/:id', authenticateToken, editorController);
-router.put('/fanfic/editor/:id', authenticateToken, saveController);
+router.get('/fanfic/editor', editorController);
+router.get('/fanfic/editor/:id', editorController);
+router.post('/fanfic', authenticateToken, saveController);
+router.put('/fanfic/:id', authenticateToken, saveController);
 
 export default router;

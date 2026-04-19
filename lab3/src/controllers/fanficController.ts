@@ -15,20 +15,15 @@ export const getAllFanficsController = (req: Request, res: Response) => {
     }
 }
 
-export const editorController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const id = req.params.id as string;
+export const editorController = async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id as string | undefined;
     let fanfic = null;
 
     if (id) {
         fanfic = await getByIdAsync(id);
         
         if (!fanfic) {
-            res.status(404).json({ error: 'Fanfic not found' });
-            return;
-        }
-        
-        if (fanfic.user_id !== req.user?.user_id) {
-            res.status(403).json({ error: 'Forbidden - only author can edit this fanfic' });
+            res.status(404).send('Fanfic not found');
             return;
         }
     }
@@ -36,7 +31,7 @@ export const editorController = async (req: AuthenticatedRequest, res: Response)
     res.render('editor', { 
         fanfic: fanfic || { 
             fanfic_id: undefined,
-            user_id: req.user?.user_id || '', 
+            user_id: '', 
             title: '', 
             description: '', 
             content: '',
