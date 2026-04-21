@@ -4,8 +4,9 @@ import pg from 'pg';
 dotenv.config(); 
 
 const { Pool } = pg;
+const useSsl = process.env.NODE_ENV === 'production' || process.env.DB_SSL === 'true';
 
 export const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
+    ssl: useSsl ? { rejectUnauthorized: false } : false
 });
