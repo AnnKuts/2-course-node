@@ -1,3 +1,4 @@
+import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -8,23 +9,58 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const dataPath = path.join(__dirname, '../../data/comment.json');
 
-export const getAllCommentsAsync = async (): Promise<Comment[]> => {
+export const getAllCommentsSync = (): Comment[] => {
     try {
-        const data = await fsPromises.readFile(dataPath, 'utf-8');
-        return JSON.parse(data);
+        const data = fs.readFileSync(dataPath, 'utf-8');
+        return JSON.parse(data) as Comment[];
     } catch (error) {
         return [];
     }
 };
 
-export const getCommentsByFanficIdAsync = async (fanfic_id: string): Promise<Comment[]> => {
-    const comments = await getAllCommentsAsync();
-    return comments.filter(c => c.fanfic_id === fanfic_id);
+export const getAllCommentsCallback = (
+    callback: (err: NodeJS.ErrnoException | null, comments: Comment[]) => void
+): void => {
+    fs.readFile(dataPath, 'utf-8', (err, data) => {
+        if (err) {
+            return callback(null, []);
+        }
+        try {
+            callback(null, JSON.parse(data) as Comment[]);
+        } catch (parseErr) {
+            callback(parseErr as NodeJS.ErrnoException, []);
+        }
+    });
 };
 
-export const getCommentByIdAsync = async (comment_id: UUID): Promise<Comment | null> => {
-    const comments = await getAllCommentsAsync();
-    return comments.find(c => c.comment_id === comment_id) || null;
+export const getAllCommentsPromise = (): Promise<Comment[]> => {
+    return fsPromises
+        .readFile(dataPath, 'utf-8')
+        .then((data) => JSON.parse(data) as Comment[])
+        .catch(() => []);
+};
+
+export const getAllCommentsAsync = async (): Promise<Comment[]> => {
+    try {
+        const data = await fsPromises.readFile(dataPath, 'utf-8');
+        return JSON.parse(data) as Comment[];
+    } catch (error) {
+        return [];
+    }
+};
+
+export const getCommentsByFanficIdAsync = (fanfic_id: string): Promise<Comment[]> => {
+    return getAllCommentsPromise().then((comments) =>
+        comments.filter((c) => c.fanfic_id === fanfic_id)
+    );
+};
+
+export const getCommentByIdAsync = (comment_id: UUID): Promise<Comment | null> => {
+    return new Promise((resolve) => {
+        getAllCommentsCallback((_err, comments) => {
+            resolve(comments.find((c) => c.comment_id === comment_id) || null);
+        });
+    });
 };
 
 export const insertCommentAsync = async (
@@ -43,7 +79,7 @@ export const insertCommentAsync = async (
 
 export const updateCommentAsync = async (comment: Comment): Promise<void> => {
     const comments = await getAllCommentsAsync();
-    const index = comments.findIndex(c => c.comment_id === comment.comment_id);
+    const index = comments.findIndex((c) => c.comment_id === comment.comment_id);
 
     if (index > -1) {
         comments[index] = comment;
@@ -55,8 +91,8 @@ export const updateCommentAsync = async (comment: Comment): Promise<void> => {
 };
 
 export const deleteCommentAsync = async (comment_id: UUID): Promise<boolean> => {
-    const comments = await getAllCommentsAsync();
-    const filtered = comments.filter(c => c.comment_id !== comment_id);
+    const comments = getAllCommentsSync();
+    const filtered = comments.filter((c) => c.comment_id !== comment_id);
 
     if (filtered.length === comments.length) {
         return false;

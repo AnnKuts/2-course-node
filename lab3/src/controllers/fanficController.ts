@@ -15,6 +15,18 @@ export const getAllFanficsController = (req: Request, res: Response) => {
     }
 }
 
+export const fanficPageController = async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id as string;
+    const fanfic = await getByIdAsync(id);
+
+    if (!fanfic) {
+        res.status(404).send('Fanfic not found');
+        return;
+    }
+
+    res.render('fanfic', { fanfic });
+};
+
 export const editorController = async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id as string | undefined;
     let fanfic = null;
