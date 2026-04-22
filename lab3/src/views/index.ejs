@@ -11,7 +11,11 @@
                 <h1>Останні фанфіки</h1>
                 <p>Свіжі історії від авторів спільноти</p>
             </div>
-            <a class="create-link" href="/fanfic/editor">Create fanfic</a>
+            <div class="hero-actions">
+                <a class="create-link secondary" href="/auth/login">Login</a>
+                <a class="create-link secondary" href="/auth/register">Register</a>
+                <a class="create-link" href="/fanfic/editor">Create fanfic</a>
+            </div>
         </header>
 
         <% if (!fanfics || fanfics.length === 0) { %>

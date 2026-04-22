@@ -58,8 +58,23 @@ body {
     font-weight: 600;
 }
 
+.hero-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
 .create-link:hover {
     background: #0860ca;
+}
+
+.create-link.secondary {
+    background: #6e7781;
+}
+
+.create-link.secondary:hover {
+    background: #57606a;
 }
 
 .grid {
@@ -133,6 +148,10 @@ body {
     }
 
     .create-link {
+        width: 100%;
+    }
+
+    .hero-actions {
         width: 100%;
     }
 
