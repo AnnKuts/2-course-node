@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= fanfic.title %></title>
+    <link rel="stylesheet" href="/styles/fanfic.css">
+</head>
+<body>
+    <div class="container">
+        <div class="fanfic-header">
+            <h1><%= fanfic.title %></h1>
+            <p><%= fanfic.description %></p>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Reviews</h2>
+            </div>
+            <div class="section-body" id="reviewsList">
+                <div class="empty">Loading reviews...</div>
+            </div>
+            <div class="form">
+                <select id="reviewRating">
+                    <option value="5">5 — Excellent</option>
+                    <option value="4">4 — Good</option>
+                    <option value="3">3 — Okay</option>
+                    <option value="2">2 — Poor</option>
+                    <option value="1">1 — Bad</option>
+                </select>
+                <textarea id="reviewComment" placeholder="Write a review..."></textarea>
+                <button onclick="submitReview()">Post Review</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Comments</h2>
+            </div>
+            <div class="section-body" id="commentsList">
+                <div class="empty">Loading comments...</div>
+            </div>
+            <div class="form">
+                <textarea id="commentText" placeholder="Write a comment..."></textarea>
+                <button onclick="submitComment()">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fanficId = '<%= fanfic.fanfic_id %>';
+        const pubId = '<%= fanfic.fanfic_id %>';
+
+        const authHeaders = () => {
+            const token = localStorage.getItem('token');
+            return token ? { 'Authorization': `Bearer ${token}` } : {};
+        };
+
+        const escapeHtml = (s) => String(s)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+
+        const loadReviews = async () => {
+            const list = document.getElementById('reviewsList');
+            try {
+                const res = await fetch(`/review/${pubId}`);
+                const reviews = await res.json();
+                if (!Array.isArray(reviews) || reviews.length === 0) {
+                    list.innerHTML = '<div class="empty">No reviews yet.</div>';
+                    return;
+                }
+                list.innerHTML = reviews.map(r => `
+                    <div class="item">
+                        <div class="item-header">
+                            <span>User: ${escapeHtml(r.user_id)}</span>
+                            <span>Rating: ${escapeHtml(r.rating)}/5</span>
+                        </div>
+                        <div class="item-text">${escapeHtml(r.comment)}</div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                list.innerHTML = '<div class="empty">Failed to load reviews.</div>';
+            }
+        };
+
+        const loadComments = async () => {
+            const list = document.getElementById('commentsList');
+            try {
+                const res = await fetch(`/comment/${fanficId}`);
+                const comments = await res.json();
+                if (!Array.isArray(comments) || comments.length === 0) {
+                    list.innerHTML = '<div class="empty">No comments yet.</div>';
+                    return;
+                }
+                list.innerHTML = comments.map(c => `
+                    <div class="item">
+                        <div class="item-header">
+                            <span>User: ${escapeHtml(c.user_id)}</span>
+                            <span>${escapeHtml(c.created_at || '')}</span>
+                        </div>
+                        <div class="item-text">${escapeHtml(c.text)}</div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                list.innerHTML = '<div class="empty">Failed to load comments.</div>';
+            }
+        };
+
+        const submitReview = async () => {
+            const comment = document.getElementById('reviewComment').value.trim();
+            const rating = document.getElementById('reviewRating').value;
+            if (!comment) {
+                alert('Please write a review comment');
+                return;
+            }
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Not authenticated. Please login first.');
+                return;
+            }
+            const res = await fetch('/review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                body: JSON.stringify({ pub_id: pubId, comment, rating: Number(rating) })
+            });
+            if (res.ok) {
+                document.getElementById('reviewComment').value = '';
+                loadReviews();
+            } else {
+                const err = await res.json().catch(() => ({}));
+                alert('Failed to post review: ' + (err.error || 'Unknown error'));
+            }
+        };
+
+        const submitComment = async () => {
+            const text = document.getElementById('commentText').value.trim();
+            if (!text) {
+                alert('Please write a comment');
+                return;
+            }
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Not authenticated. Please login first.');
+                return;
+            }
+            const res = await fetch('/comment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                body: JSON.stringify({ fanfic_id: fanficId, text })
+            });
+            if (res.ok) {
+                document.getElementById('commentText').value = '';
+                loadComments();
+            } else {
+                const err = await res.json().catch(() => ({}));
+                alert('Failed to post comment: ' + (err.error || 'Unknown error'));
+            }
+        };
+
+        window.submitReview = submitReview;
+        window.submitComment = submitComment;
+
+        loadReviews();
+        loadComments();
+    </script>
+</body>
+</html>
