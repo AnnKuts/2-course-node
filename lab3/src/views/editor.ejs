@@ -14,6 +14,7 @@
                 <% } %>
                 <input type="text" id="title" value="<%= fanfic.title %>" placeholder="Title">
                 <input type="text" id="desc" value="<%= fanfic.description %>" placeholder="Description">
+                <input type="text" id="restriction" value="<%= fanfic.restriction || '' %>" placeholder="Restriction (e.g., 18+)">
                 <select id="genre">
                     <option value="">Select Genre</option>
                     <option value="Fantasy" <%= fanfic.genre && fanfic.genre.includes('Fantasy') ? 'selected' : '' %>>Fantasy</option>
@@ -42,6 +43,7 @@
         const preview = document.getElementById('preview');
         const title = document.getElementById('title');
         const desc = document.getElementById('desc');
+        const restriction = document.getElementById('restriction');
 
         const updatePreview = () => {
             preview.innerHTML = marked.parse(content.value);
@@ -76,6 +78,7 @@
             const data = {
                 title: title.value,
                 description: desc.value,
+                restriction: restriction.value,
                 genre: [genre],
                 content: content.value
             };
@@ -91,7 +94,8 @@
             
             if (res.ok) {
                 const result = await res.json();
-                alert((isUpdate ? 'Updated' : 'Created') + '! ID: ' + result.fanfic_id);
+                alert('Successfully ' + (isUpdate ? 'updated' : 'created') + '!');
+                window.location.href = `/fanfic/${result.fanfic_id}`;
             } else {
                 const error = await res.json();
                 alert('Save failed! ' + (error.error || error.message || 'Unknown error'));
