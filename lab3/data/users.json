@@ -14,5 +14,13 @@
     "password": "$2b$10$oE/mbpXzzZn80HejJNGYCuliD66JUv1SoYMzQZPntO2dIcv/9RSPO",
     "is_admin": false,
     "is_active": true
+  },
+  {
+    "user_id": "f7279d2f-ccaa-4409-9f3b-3d941cbe1334",
+    "username": "fanficinator",
+    "email": "fanfic@gmail.com",
+    "password": "$2b$10$api8uSjmVANVm4FZxWReuuLpVUwrHkT7tDhHSQ4KekBSZyiNfsKXi",
+    "is_admin": false,
+    "is_active": true
   }
 ]

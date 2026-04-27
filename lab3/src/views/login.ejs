@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="/styles/auth.css">
+</head>
+<body>
+    <div class="page">
+        <div class="auth-card">
+            <h1>Login</h1>
+            <p class="subtitle">Sign in to create, edit, and interact with fanfics.</p>
+
+            <form id="loginForm" class="form">
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="you@example.com" required>
+
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" placeholder="Your password" required>
+
+                <button type="submit">Sign in</button>
+            </form>
+
+            <p id="status" class="status" aria-live="polite"></p>
+
+            <div class="links">
+                <a href="/auth/register">Create account</a>
+                <a href="/">Back to home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('loginForm');
+        const statusEl = document.getElementById('status');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            statusEl.textContent = '';
+
+            const payload = {
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value
+            };
+
+            const res = await fetch('/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json().catch(() => ({}));
+
+            if (res.ok && data.token) {
+                localStorage.setItem('token', data.token);
+                statusEl.className = 'status ok';
+                statusEl.textContent = 'Logged in successfully. Redirecting...';
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 500);
+                return;
+            }
+
+            statusEl.className = 'status error';
+            statusEl.textContent = data.message || 'Login failed';
+        });
+    </script>
+</body>
+</html>
