@@ -5,6 +5,8 @@ import { registerController, loginController, meController } from '../controller
 import { authenticateToken } from '../middleware/authMiddleware.ts';
 
 router.get('/', getAllFanficsController);
+router.get('/auth/login', (req, res) => res.render('login'));
+router.get('/auth/register', (req, res) => res.render('register'));
 
 router.post('/auth/register', registerController);
 router.post('/auth/login', loginController);
