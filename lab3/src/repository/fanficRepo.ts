@@ -45,3 +45,15 @@ export const saveFanficAsync = async (fanfic: Fanfic): Promise<void> => {
     
     await fsPromises.writeFile(dataPath, JSON.stringify(fanfics, null, 2));
 };
+
+export const deleteFanficAsync = async (id: string): Promise<boolean> => {
+    let fanfics = await getAllFanficsAsync();
+    const initialLength = fanfics.length;
+    fanfics = fanfics.filter(f => f.fanfic_id !== id);
+    
+    if (fanfics.length !== initialLength) {
+        await fsPromises.writeFile(dataPath, JSON.stringify(fanfics, null, 2));
+        return true;
+    }
+    return false;
+};
