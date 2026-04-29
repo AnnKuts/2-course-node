@@ -81,7 +81,7 @@
     "user_id": "71145930-2232-49b2-8ff8-9fc79e5b1363",
     "title": "s",
     "description": "s",
-    "content": "as",
+    "content": "asdfsdfsfsdfsdassASAs",
     "genre": [
       "Fantasy",
       "Romance",
@@ -93,7 +93,7 @@
       "Horror"
     ],
     "restriction": "12+",
-    "rating": 4,
+    "rating": 4.090909090909091,
     "reports": 0
   }
 ]

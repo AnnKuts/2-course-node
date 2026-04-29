@@ -87,8 +87,8 @@ export const updateReviewController = async (
             rating: numericRating,
         };
 
-        await updateFanficRatingAsync(existing.pub_id);
         await updateAsync(updated);
+        await updateFanficRatingAsync(existing.pub_id);
         res.json({ review: updated, message: 'Review updated' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to update review' });

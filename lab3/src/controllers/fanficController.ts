@@ -89,6 +89,7 @@ export const saveController = async (req: AuthenticatedRequest, res: Response): 
     }
 
     try {
+        let existingRating = 0;
         if (id) {
             const existing = await getByIdAsync(id as string);
             if (!existing) {
@@ -99,6 +100,7 @@ export const saveController = async (req: AuthenticatedRequest, res: Response): 
                 res.status(403).json({ error: 'Only author can edit this fanfic' });
                 return;
             }
+            existingRating = existing.rating;
         }
 
         const fanfic = {
@@ -109,7 +111,7 @@ export const saveController = async (req: AuthenticatedRequest, res: Response): 
             content,
             genre: Array.isArray(genre) ? genre : [genre],
             restriction,
-            rating: 0,
+            rating: existingRating,
             reports: 0
         };
 
