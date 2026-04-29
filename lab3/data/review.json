@@ -54,5 +54,26 @@
     "user_id": "336f818a-cbf5-43b7-88c2-d40e0ba05c97",
     "comment": "Імба",
     "rating": 5
+  },
+  {
+    "review_id": "c9d15294-9d09-4445-a9da-e70908d13e23",
+    "pub_id": "1777315479105",
+    "user_id": "4d41aa38-ae1c-415a-bb04-70a0f1975859",
+    "comment": "bomba",
+    "rating": 3
+  },
+  {
+    "review_id": "14306804-64a8-49c6-85c4-8cdf86822af6",
+    "pub_id": "1777475729654",
+    "user_id": "4d41aa38-ae1c-415a-bb04-70a0f1975859",
+    "comment": "sdaas",
+    "rating": 5
+  },
+  {
+    "review_id": "07f9ec37-c295-4f1f-9204-a6938f5e9a30",
+    "pub_id": "1777475729654",
+    "user_id": "4d41aa38-ae1c-415a-bb04-70a0f1975859",
+    "comment": "213213123",
+    "rating": 1
   }
 ]

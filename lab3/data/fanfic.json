@@ -62,5 +62,31 @@
     "restriction": "і",
     "rating": 0,
     "reports": 0
+  },
+  {
+    "fanfic_id": "1777475729654",
+    "user_id": "4d41aa38-ae1c-415a-bb04-70a0f1975859",
+    "title": "123",
+    "description": "123",
+    "content": "67 !!!!!!",
+    "genre": [
+      "Horror"
+    ],
+    "restriction": "14,5+",
+    "rating": 0,
+    "reports": 0
+  },
+  {
+    "fanfic_id": "1777478890448",
+    "user_id": "71145930-2232-49b2-8ff8-9fc79e5b1363",
+    "title": "1234",
+    "description": "123",
+    "content": "1",
+    "genre": [
+      "Drama"
+    ],
+    "restriction": "12+",
+    "rating": 0,
+    "reports": 0
   }
 ]

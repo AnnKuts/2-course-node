@@ -53,3 +53,7 @@ export const meController = (req: AuthenticatedRequest, res: Response): void => 
 
     res.status(200).json({ user: req.user });
 };
+
+export const logoutController = (req: Request, res: Response): void => {
+    res.status(200).json({ message: 'Logged out successfully' });
+};

@@ -38,5 +38,21 @@
     "password": "$2b$10$V0PlHq.p8nGFLigdKq1kTO.wpSeJlqnIG4pK25hQNppxjdul3MZRO",
     "is_admin": false,
     "is_active": true
+  },
+  {
+    "user_id": "4d41aa38-ae1c-415a-bb04-70a0f1975859",
+    "username": "shems",
+    "email": "shems@gmail.com",
+    "password": "$2b$10$TIoGQ6kpEt9JJZLrQLjHP.c.ztrNkGrQlliIfoDuAEcuNVwxsmswe",
+    "is_admin": false,
+    "is_active": true
+  },
+  {
+    "user_id": "71145930-2232-49b2-8ff8-9fc79e5b1363",
+    "username": "aaaa aaaa",
+    "email": "aaaa@example.com",
+    "password": "$2b$10$446OPsm2F7U0Xi6LboZwJOZ2RkaWsc1QqzRByHZF/QX7YsdxHM3nS",
+    "is_admin": false,
+    "is_active": true
   }
 ]
