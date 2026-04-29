@@ -42,6 +42,7 @@ export const editorController = async (req: Request, res: Response): Promise<voi
 
 export const createController = async (req: Request, res: Response): Promise<void> => {
     const { title, genre } = req.body;
+    const user = (req as any).user;
     if (!title || typeof title !== 'string' || title.trim().length < 3) {
         res.status(400).json({ error: 'Title must be at least 3 characters' });
         return;
@@ -50,12 +51,16 @@ export const createController = async (req: Request, res: Response): Promise<voi
         res.status(400).json({ error: 'Missing genre field' });
         return;
     }
+    if (!user || !user.user_id) {
+        res.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
     const isUnique = await checkTitleUnique(title);
     if (!isUnique) {
         res.status(400).json({ error: 'Fanfic with this title already exists' });
         return;
     }
-    const newId = await createAsync(req.body);
+    const newId = await createAsync({ ...req.body, user_id: user.user_id });
     res.status(201).json({ fanfic_id: newId, message: 'Fanfic created' });
 };
 
