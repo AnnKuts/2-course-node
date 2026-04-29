@@ -15,7 +15,7 @@
                 <a class="create-link secondary" id="loginLink" href="/auth/login" style="display:none;">Login</a>
                 <a class="create-link secondary" id="registerLink" href="/auth/register" style="display:none;">Register</a>
                 <button class="create-link" style="background-color: red; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; display: none;" id="logoutBtn">Logout</button>
-                <a class="create-link" href="/fanfic/editor">Create fanfic</a>
+                <a class="create-link" href="#" id="createFanficBtn">Create fanfic</a>
             </div>
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
@@ -37,6 +37,29 @@
                     logoutBtn.addEventListener('click', function() {
                         localStorage.removeItem('token');
                         window.location.href = '/';
+                    });
+
+                    document.getElementById('createFanficBtn').addEventListener('click', async function(e) {
+                        e.preventDefault();
+                        const token = localStorage.getItem('token');
+                        if (!token) {
+                            window.location.href = '/auth/login';
+                            return;
+                        }
+                        try {
+                            const res = await fetch('/auth/me', {
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            });
+                            if (res.status === 200) {
+                                window.location.href = '/fanfic/editor';
+                            } else {
+                                localStorage.removeItem('token');
+                                window.location.href = '/auth/login';
+                            }
+                        } catch {
+                            localStorage.removeItem('token');
+                            window.location.href = '/auth/login';
+                        }
                     });
                 });
             </script>
