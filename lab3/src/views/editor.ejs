@@ -14,9 +14,13 @@
                 <% } %>
                 <input type="text" id="title" value="<%= fanfic.title %>" placeholder="Title">
                 <input type="text" id="desc" value="<%= fanfic.description %>" placeholder="Description">
-                <input type="text" id="restriction" value="<%= fanfic.restriction || '' %>" placeholder="Restriction (e.g., 18+)">
-                <select id="genre">
-                    <option value="">Select Genre</option>
+                <select id="restriction">
+                    <option value="0+" <%= fanfic.restriction === '0+' ? 'selected' : '' %>>0+</option>
+                    <option value="12+" <%= fanfic.restriction === '12+' ? 'selected' : '' %>>12+</option>
+                    <option value="16+" <%= fanfic.restriction === '16+' ? 'selected' : '' %>>16+</option>
+                    <option value="18+" <%= fanfic.restriction === '18+' ? 'selected' : '' %>>18+</option>
+                </select>
+                <select id="genre" multiple size="8">
                     <option value="Fantasy" <%= fanfic.genre && fanfic.genre.includes('Fantasy') ? 'selected' : '' %>>Fantasy</option>
                     <option value="Romance" <%= fanfic.genre && fanfic.genre.includes('Romance') ? 'selected' : '' %>>Romance</option>
                     <option value="Drama" <%= fanfic.genre && fanfic.genre.includes('Drama') ? 'selected' : '' %>>Drama</option>
@@ -56,33 +60,29 @@
         updatePreview();
 
         const saveFanfic = async () => {
-            const genre = document.getElementById('genre').value.trim();
-            
-            if (!genre) {
-                alert('Please select a Genre');
+            const genreSelect = document.getElementById('genre');
+            const selectedGenres = Array.from(genreSelect.selectedOptions).map(opt => opt.value);
+            if (!selectedGenres.length) {
+                alert('Please select at least one Genre');
                 return;
             }
-            
             const token = localStorage.getItem('token');
             if (!token) {
                 alert('Not authenticated. Please login first.');
                 return;
             }
-            
             const fanficIdInput = document.getElementById('fanficId');
             const fanficId = fanficIdInput ? fanficIdInput.value : null;
             const isUpdate = !!fanficId;
             const method = isUpdate ? 'PUT' : 'POST';
             const url = isUpdate ? `/fanfic/${fanficId}` : '/fanfic';
-            
             const data = {
                 title: title.value,
                 description: desc.value,
                 restriction: restriction.value,
-                genre: [genre],
+                genre: selectedGenres,
                 content: content.value
             };
-            
             const res = await fetch(url, { 
                 method, 
                 headers: { 
@@ -91,7 +91,6 @@
                 }, 
                 body: JSON.stringify(data) 
             });
-            
             if (res.ok) {
                 const result = await res.json();
                 alert('Successfully ' + (isUpdate ? 'updated' : 'created') + '!');
