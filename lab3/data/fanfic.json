@@ -77,16 +77,23 @@
     "reports": 0
   },
   {
-    "fanfic_id": "1777478890448",
+    "fanfic_id": "1777481518162",
     "user_id": "71145930-2232-49b2-8ff8-9fc79e5b1363",
-    "title": "1234",
-    "description": "123",
-    "content": "1",
+    "title": "s",
+    "description": "s",
+    "content": "as",
     "genre": [
-      "Drama"
+      "Fantasy",
+      "Romance",
+      "Drama",
+      "Comedy",
+      "Action",
+      "Mystery",
+      "Sci-Fi",
+      "Horror"
     ],
     "restriction": "12+",
-    "rating": 5,
+    "rating": 4,
     "reports": 0
   }
 ]
