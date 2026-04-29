@@ -8,7 +8,7 @@
       "Fantasy"
     ],
     "restriction": "16+",
-    "rating": 4.8,
+    "rating": 4,
     "reports": 2,
     "content": "## Розділ 1\n\nЦе була звичайна ніч..."
   },
@@ -20,7 +20,7 @@
     "content": "adsdasdasdas\n### TITLEEEE\n## TITLEEEEEEE\n# TITLE!!!!\n\n**bold?**\n\n*italiano por favor*\n\nuhm just simple text\n\n- хто\n- прочитав\n- той\n- умнічка",
     "genre": [],
     "restriction": "18+",
-    "rating": 0,
+    "rating": 4.5,
     "reports": 0
   },
   {
@@ -33,7 +33,7 @@
       "Mystery"
     ],
     "restriction": "16+",
-    "rating": 4.5,
+    "rating": 4.8,
     "reports": 0,
     "content": "## Розділ 1. Знахідка\n\nБуло пізно ввечері, коли Марко відкрив термінал.\n\n```bash\ngit log --all\n```\n\nНа екрані з'явилися коміти, яких він ніколи не робив.\n\n**Хто був автором?**\n\n## Розділ 2. Розслідування\n\n- перевірив гілки\n- подивився reflog\n- знайшов підозрілий тег\n\n*Історія тільки починалася...*"
   },
@@ -47,7 +47,7 @@
       "Horror"
     ],
     "restriction": "21+",
-    "rating": 0,
+    "rating": 4.333333333333333,
     "reports": 0
   },
   {
@@ -60,7 +60,7 @@
       "Romance"
     ],
     "restriction": "і",
-    "rating": 0,
+    "rating": 5,
     "reports": 0
   },
   {
@@ -73,7 +73,7 @@
       "Horror"
     ],
     "restriction": "14,5+",
-    "rating": 0,
+    "rating": 3.3333333333333335,
     "reports": 0
   },
   {
@@ -86,7 +86,7 @@
       "Drama"
     ],
     "restriction": "12+",
-    "rating": 0,
+    "rating": 5,
     "reports": 0
   }
 ]

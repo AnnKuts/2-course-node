@@ -61,6 +61,12 @@
                             window.location.href = '/auth/login';
                         }
                     });
+
+                    document.addEventListener('visibilitychange', () => {
+                        if (document.visibilityState === 'visible') {
+                            window.location.reload();
+                        }
+                    });
                 });
             </script>
         </header>
@@ -79,7 +85,7 @@
                         </h2>
                         <p class="card-description"><%= fanfic.description %></p>
                         <div class="meta-row">
-                            <span>Rating: <%= fanfic.rating %></span>
+                            <span>Rating: <%= fanfic.rating.toFixed(1) %></span>
                             <span>Restriction: <%= fanfic.restriction %></span>
                         </div>
                     </article>

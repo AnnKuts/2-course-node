@@ -7,6 +7,7 @@ import {
     updateAsync,
     deleteAsync,
 } from '../services/reviewService.ts';
+import { updateFanficRatingAsync } from '../services/fanficService.ts';
 import { AuthenticatedRequest } from '../middleware/authMiddleware.ts';
 
 export const getReviewsByPubController = async (
@@ -48,6 +49,7 @@ export const createReviewController = async (
             comment,
             rating: numericRating,
         });
+        await updateFanficRatingAsync(pub_id as UUID);
         res.status(201).json({ review, message: 'Review created' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to create review' });
@@ -85,6 +87,7 @@ export const updateReviewController = async (
             rating: numericRating,
         };
 
+        await updateFanficRatingAsync(existing.pub_id);
         await updateAsync(updated);
         res.json({ review: updated, message: 'Review updated' });
     } catch (error) {
@@ -111,6 +114,7 @@ export const deleteReviewController = async (
         }
 
         await deleteAsync(review_id);
+        await updateFanficRatingAsync(existing.pub_id);
         res.json({ message: 'Review deleted' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to delete review' });
