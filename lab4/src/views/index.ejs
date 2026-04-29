@@ -14,7 +14,31 @@
             <div class="hero-actions">
                 <a class="create-link secondary" href="/auth/login">Login</a>
                 <a class="create-link secondary" href="/auth/register">Register</a>
-                <a class="create-link" href="/fanfic/editor">Create fanfic</a>
+                <a class="create-link" href="#" id="createFanficBtn">Create fanfic</a>
+                <script>
+                    document.getElementById('createFanficBtn').addEventListener('click', async function(e) {
+                        e.preventDefault();
+                        const token = localStorage.getItem('token');
+                        if (!token) {
+                            window.location.href = '/auth/login';
+                            return;
+                        }
+                        try {
+                            const res = await fetch('/auth/me', {
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            });
+                            if (res.status === 200) {
+                                window.location.href = '/fanfic/editor';
+                            } else {
+                                localStorage.removeItem('token');
+                                window.location.href = '/auth/login';
+                            }
+                        } catch {
+                            localStorage.removeItem('token');
+                            window.location.href = '/auth/login';
+                        }
+                    });
+                </script>
             </div>
         </header>
 
