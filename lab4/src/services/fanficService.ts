@@ -19,7 +19,7 @@ export const createAsync = async (data: Partial<Fanfic>): Promise<string> => {
         title: data.title ?? '',
         description: data.description ?? '',
         content: data.content ?? '',
-        genre: data.genre ?? '',
+        genre: Array.isArray(data.genre) ? data.genre : (data.genre ? [data.genre] : []),
         restriction: data.restriction ?? '0+',
         rating: data.rating !== undefined ? Number(data.rating) : 0,
         reports: data.reports !== undefined ? Number(data.reports) : 0

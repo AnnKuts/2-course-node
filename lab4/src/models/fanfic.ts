@@ -3,7 +3,7 @@ export interface Fanfic {
     user_id: string;
     title: string;
     description?: string;
-    genre: string;
+    genre: string[];
     restriction?: string;
     rating?: number;
     reports?: number;
