@@ -10,9 +10,12 @@ export const getByIdAsync = async (id: string): Promise<Fanfic | null> => {
 };
 
 export const createAsync = async (data: Partial<Fanfic>): Promise<string> => {
+    if (!data.user_id) {
+        throw new Error('user_id is required');
+    }
     const fanfic: Partial<Fanfic> = {
         fanfic_id: undefined,
-        user_id: data.user_id ?? '',
+        user_id: data.user_id,
         title: data.title ?? '',
         description: data.description ?? '',
         content: data.content ?? '',
