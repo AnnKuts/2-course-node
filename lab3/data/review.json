@@ -54,5 +54,89 @@
     "user_id": "336f818a-cbf5-43b7-88c2-d40e0ba05c97",
     "comment": "Імба",
     "rating": 5
+  },
+  {
+    "review_id": "c9d15294-9d09-4445-a9da-e70908d13e23",
+    "pub_id": "1777315479105",
+    "user_id": "4d41aa38-ae1c-415a-bb04-70a0f1975859",
+    "comment": "bomba",
+    "rating": 3
+  },
+  {
+    "review_id": "14306804-64a8-49c6-85c4-8cdf86822af6",
+    "pub_id": "1777475729654",
+    "user_id": "4d41aa38-ae1c-415a-bb04-70a0f1975859",
+    "comment": "sdaas",
+    "rating": 5
+  },
+  {
+    "review_id": "07f9ec37-c295-4f1f-9204-a6938f5e9a30",
+    "pub_id": "1777475729654",
+    "user_id": "4d41aa38-ae1c-415a-bb04-70a0f1975859",
+    "comment": "213213123",
+    "rating": 1
+  },
+  {
+    "review_id": "0c09459d-2ebe-4d56-bfb8-0238402c1695",
+    "pub_id": "1",
+    "user_id": "71145930-2232-49b2-8ff8-9fc79e5b1363",
+    "comment": "sa",
+    "rating": 5
+  },
+  {
+    "review_id": "deb0c148-18ca-4f07-83fc-9da8dae93e17",
+    "pub_id": "1777475729654",
+    "user_id": "71145930-2232-49b2-8ff8-9fc79e5b1363",
+    "comment": "3.3",
+    "rating": 4
+  },
+  {
+    "review_id": "0e64e33c-3e6d-4bfa-ba3d-dcd74ce56b6e",
+    "pub_id": "1775755055312",
+    "user_id": "71145930-2232-49b2-8ff8-9fc79e5b1363",
+    "comment": "dssa",
+    "rating": 5
+  },
+  {
+    "review_id": "35d1dbdd-d7a1-4aca-9ee6-5bd5a99be6c7",
+    "pub_id": "mock_001",
+    "user_id": "71145930-2232-49b2-8ff8-9fc79e5b1363",
+    "comment": "dfdfs",
+    "rating": 5
+  },
+  {
+    "review_id": "9e283a70-bbef-4984-86b6-35e317e4a84d",
+    "pub_id": "1777315479105",
+    "user_id": "71145930-2232-49b2-8ff8-9fc79e5b1363",
+    "comment": "dsdass",
+    "rating": 5
+  },
+  {
+    "review_id": "be2c1c31-87e7-4b01-a767-d1bc817faf80",
+    "pub_id": "1777320730745",
+    "user_id": "71145930-2232-49b2-8ff8-9fc79e5b1363",
+    "comment": "i",
+    "rating": 5
+  },
+  {
+    "review_id": "ee4e0bd6-7559-434e-b419-859cb71c490b",
+    "pub_id": "1777478890448",
+    "user_id": "71145930-2232-49b2-8ff8-9fc79e5b1363",
+    "comment": "я сів за лаби",
+    "rating": 5
+  },
+  {
+    "review_id": "bbd4bb7f-fe34-4bfe-a90d-5758745f578c",
+    "pub_id": "1775755055312",
+    "user_id": "71145930-2232-49b2-8ff8-9fc79e5b1363",
+    "comment": "Good",
+    "rating": 4
+  },
+  {
+    "review_id": "df5d109c-03d8-4925-93d4-49373e1593c1",
+    "pub_id": "1",
+    "user_id": "71145930-2232-49b2-8ff8-9fc79e5b1363",
+    "comment": "gg",
+    "rating": 5
   }
 ]
