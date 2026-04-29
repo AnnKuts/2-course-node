@@ -16,7 +16,7 @@ export const createAsync = async (data: Partial<Fanfic>): Promise<string> => {
         title: data.title ?? '',
         description: data.description ?? '',
         content: data.content ?? '',
-        genres: Array.isArray(data.genres) ? data.genres : (data.genres ? [data.genres] : []),
+        genre: data.genre ?? '',
         restriction: data.restriction ?? '0+',
         rating: data.rating !== undefined ? Number(data.rating) : 0,
         reports: data.reports !== undefined ? Number(data.reports) : 0
@@ -26,4 +26,9 @@ export const createAsync = async (data: Partial<Fanfic>): Promise<string> => {
 
 export const updateAsync = async (id: string, patch: Partial<Fanfic>) => {
     await update(id, patch);
+};
+
+export const checkTitleUnique = async (title: string): Promise<boolean> => {
+    const allFanfics = await getAll();
+    return !allFanfics.some(f => f.title.trim().toLowerCase() === title.trim().toLowerCase());
 };

@@ -14,15 +14,16 @@
                 <% } %>
                 <input type="text" id="title" value="<%= fanfic.title %>" placeholder="Title" required>
                 <input type="text" id="desc" value="<%= fanfic.description %>" placeholder="Description">
-                <select id="genres" multiple required>
-                    <option value="Fantasy" <%= fanfic.genres && fanfic.genres.includes('Fantasy') ? 'selected' : '' %>>Fantasy</option>
-                    <option value="Romance" <%= fanfic.genres && fanfic.genres.includes('Romance') ? 'selected' : '' %>>Romance</option>
-                    <option value="Drama" <%= fanfic.genres && fanfic.genres.includes('Drama') ? 'selected' : '' %>>Drama</option>
-                    <option value="Comedy" <%= fanfic.genres && fanfic.genres.includes('Comedy') ? 'selected' : '' %>>Comedy</option>
-                    <option value="Action" <%= fanfic.genres && fanfic.genres.includes('Action') ? 'selected' : '' %>>Action</option>
-                    <option value="Mystery" <%= fanfic.genres && fanfic.genres.includes('Mystery') ? 'selected' : '' %>>Mystery</option>
-                    <option value="Sci-Fi" <%= fanfic.genres && fanfic.genres.includes('Sci-Fi') ? 'selected' : '' %>>Sci-Fi</option>
-                    <option value="Horror" <%= fanfic.genres && fanfic.genres.includes('Horror') ? 'selected' : '' %>>Horror</option>
+                <select id="genre" required>
+                    <option value="">Select Genre</option>
+                    <option value="Fantasy" <%= fanfic.genre === 'Fantasy' ? 'selected' : '' %>>Fantasy</option>
+                    <option value="Romance" <%= fanfic.genre === 'Romance' ? 'selected' : '' %>>Romance</option>
+                    <option value="Drama" <%= fanfic.genre === 'Drama' ? 'selected' : '' %>>Drama</option>
+                    <option value="Comedy" <%= fanfic.genre === 'Comedy' ? 'selected' : '' %>>Comedy</option>
+                    <option value="Action" <%= fanfic.genre === 'Action' ? 'selected' : '' %>>Action</option>
+                    <option value="Mystery" <%= fanfic.genre === 'Mystery' ? 'selected' : '' %>>Mystery</option>
+                    <option value="Sci-Fi" <%= fanfic.genre === 'Sci-Fi' ? 'selected' : '' %>>Sci-Fi</option>
+                    <option value="Horror" <%= fanfic.genre === 'Horror' ? 'selected' : '' %>>Horror</option>
                 </select>
                 <label for="restriction">Вікове обмеження:</label>
                 <select name="restriction" id="restriction" required>
@@ -60,10 +61,9 @@
         updatePreview();
 
         const saveFanfic = async () => {
-            const genres = Array.from(document.getElementById('genres').selectedOptions).map(option => option.value);
-
-            if (genres.length === 0) {
-                alert('Please select at least one genre');
+            const genre = document.getElementById('genre').value;
+            if (!genre) {
+                alert('Please select a genre');
                 return;
             }
 
@@ -76,22 +76,27 @@
             const data = {
                 title: title.value,
                 description: desc.value,
-                genres: genres,
+                genre: genre,
                 content: content.value,
                 restriction: document.getElementById('restriction').value
             };
 
+            const token = localStorage.getItem('token');
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+
             const res = await fetch(url, {
                 method,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers,
                 body: JSON.stringify(data)
             });
 
             if (res.ok) {
                 const result = await res.json();
-                alert(isUpdate ? 'Updated!' : ('Created! ID: ' + result.fanfic_id));
+                alert(isUpdate ? 'Updated!' : 'Created!');
+                window.location.href = '/';
             } else {
                 const error = await res.json();
                 alert('Save failed! ' + (error.error || error.message || 'Unknown error'));

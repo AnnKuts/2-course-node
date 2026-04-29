@@ -1,40 +1,45 @@
 import { pool } from '../db.ts';
 import { Fanfic } from '../models/fanfic.ts';
-import { FanficDbRow } from '../interfaces/fanficDbInterface.ts';
 
 export const getAll = async (): Promise<Fanfic[]> => {
-    const result = await pool.query<FanficDbRow>(
+    const result = await pool.query(
         `SELECT f.*, fc.content,
-                COALESCE(json_agg(g.name) FILTER (WHERE g.name IS NOT NULL), '[]') AS genres
+                (
+                    SELECT g.name
+                    FROM fanfic_genres fg
+                    JOIN genres g ON fg.genre_id = g.genre_id
+                    WHERE fg.fanfic_id = f.fanfic_id
+                    LIMIT 1
+                ) AS genre
          FROM fanfics f
-         LEFT JOIN fanfic_contents fc ON f.fanfic_id = fc.fanfic_id
-         LEFT JOIN fanfic_genres fg ON f.fanfic_id = fg.fanfic_id
-         LEFT JOIN genres g ON fg.genre_id = g.genre_id
-         GROUP BY f.fanfic_id, fc.content`);
+         LEFT JOIN fanfic_contents fc ON f.fanfic_id = fc.fanfic_id`);
 
-    return result.rows.map((r) => ({
+    return result.rows.map((r: any) => ({
         fanfic_id: r.fanfic_id,
         user_id: r.user_id || '',
         title: r.title,
         description: r.description,
-        genres: r.genres || [],
+        genre: r.genre ?? '',
         restriction: r.restriction,
         rating: Number(r.rating) || 0,
         reports: Number(r.reports) || 0,
         content: r.content
-    } as Fanfic));
+    }) as Fanfic);
 };
 
 export const getById = async (id: string): Promise<Fanfic | null> => {
-    const result = await pool.query<FanficDbRow>(
+    const result = await pool.query(
         `SELECT f.*, fc.content,
-                COALESCE(json_agg(g.name) FILTER (WHERE g.name IS NOT NULL), '[]') AS genres
+                (
+                    SELECT g.name
+                    FROM fanfic_genres fg
+                    JOIN genres g ON fg.genre_id = g.genre_id
+                    WHERE fg.fanfic_id = f.fanfic_id
+                    LIMIT 1
+                ) AS genre
          FROM fanfics f
          LEFT JOIN fanfic_contents fc ON f.fanfic_id = fc.fanfic_id
-         LEFT JOIN fanfic_genres fg ON f.fanfic_id = fg.fanfic_id
-         LEFT JOIN genres g ON fg.genre_id = g.genre_id
-         WHERE f.fanfic_id = $1
-         GROUP BY f.fanfic_id, fc.content`, [id]);
+         WHERE f.fanfic_id = $1`, [id]);
 
     if (!result.rows.length) return null;
     const r = result.rows[0];
@@ -43,7 +48,7 @@ export const getById = async (id: string): Promise<Fanfic | null> => {
         user_id: r.user_id || '',
         title: r.title,
         description: r.description,
-        genres: r.genres || [],
+        genre: r.genre ?? '',
         restriction: r.restriction,
         rating: Number(r.rating) || 0,
         reports: Number(r.reports) || 0,
@@ -66,13 +71,11 @@ export const create = async (fanfic: Partial<Fanfic>): Promise<string> => {
             await client.query(`INSERT INTO fanfic_contents (fanfic_id, content) VALUES ($1, $2)`, [newId, fanfic.content]);
         }
 
-        if (fanfic.genres && fanfic.genres.length) {
-            for (const gName of fanfic.genres) {
-                await client.query(`INSERT INTO genres (name) VALUES ($1) ON CONFLICT (name) DO NOTHING`, [gName]);
-                const sel = await client.query(`SELECT genre_id FROM genres WHERE name=$1`, [gName]);
-                const genreId = sel.rows[0].genre_id;
-                await client.query(`INSERT INTO fanfic_genres (fanfic_id, genre_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`, [newId, genreId]);
-            }
+        if (fanfic.genre) {
+            await client.query(`INSERT INTO genres (name) VALUES ($1) ON CONFLICT (name) DO NOTHING`, [fanfic.genre]);
+            const sel = await client.query(`SELECT genre_id FROM genres WHERE name=$1`, [fanfic.genre]);
+            const genreId = sel.rows[0].genre_id;
+            await client.query(`INSERT INTO fanfic_genres (fanfic_id, genre_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`, [newId, genreId]);
         }
 
         await client.query('COMMIT');
@@ -121,31 +124,13 @@ export const update = async (id: string, fanfic: Partial<Fanfic>): Promise<void>
             );
         }
 
-        if (fanfic.genres !== undefined) {
-            const currentGenresRes = await client.query<{ name: string }>(
-                `SELECT g.name FROM fanfic_genres fg JOIN genres g ON fg.genre_id = g.genre_id WHERE fg.fanfic_id = $1`,
-                [id]
-            );
-            const currentGenres = currentGenresRes.rows.map(r => r.name);
-
-            const newGenres = fanfic.genres || [];
-
-            const toAdd = newGenres.filter(g => !currentGenres.includes(g));
-            const toRemove = currentGenres.filter(g => !newGenres.includes(g));
-
-            for (const gName of toAdd) {
-                await client.query(`INSERT INTO genres (name) VALUES ($1) ON CONFLICT (name) DO NOTHING`, [gName]);
-                const sel = await client.query(`SELECT genre_id FROM genres WHERE name=$1`, [gName]);
+        if (fanfic.genre !== undefined) {
+            await client.query(`DELETE FROM fanfic_genres WHERE fanfic_id = $1`, [id]);
+            if (fanfic.genre) {
+                await client.query(`INSERT INTO genres (name) VALUES ($1) ON CONFLICT (name) DO NOTHING`, [fanfic.genre]);
+                const sel = await client.query(`SELECT genre_id FROM genres WHERE name=$1`, [fanfic.genre]);
                 const genreId = sel.rows[0].genre_id;
                 await client.query(`INSERT INTO fanfic_genres (fanfic_id, genre_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`, [id, genreId]);
-            }
-
-            for (const gName of toRemove) {
-                const sel = await client.query(`SELECT genre_id FROM genres WHERE name=$1`, [gName]);
-                if (sel.rows.length) {
-                    const genreId = sel.rows[0].genre_id;
-                    await client.query(`DELETE FROM fanfic_genres WHERE fanfic_id = $1 AND genre_id = $2`, [id, genreId]);
-                }
             }
         }
 

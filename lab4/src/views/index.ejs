@@ -1,14 +1,68 @@
 <!DOCTYPE html>
 <html>
-<head><title><%= title %></title></head>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/styles/index.css">
+</head>
 <body>
-    <h1>Останні фанфіки</h1>
-    <% fanfics.forEach(fanfic => { %>
-        <div class="card">
-            <h3><a href="/fanfic/<%= fanfic.fanfics_id %>"><%= fanfic.title %></a></h3>
-            <p><%= fanfic.desc %></p>
-            <span>Rating: <%= fanfic.rating %> | Restriction: <%= fanfic.restriction %></span>
-        </div>
-    <% }) %>
+    <div class="page">
+        <header class="hero">
+            <div>
+                <h1>Останні фанфіки</h1>
+                <p>Свіжі історії від авторів спільноти</p>
+            </div>
+            <div class="hero-actions">
+                <a class="create-link secondary" href="/auth/login">Login</a>
+                <a class="create-link secondary" href="/auth/register">Register</a>
+                <a class="create-link" href="#" id="createFanficBtn">Create fanfic</a>
+                <script>
+                    document.getElementById('createFanficBtn').addEventListener('click', async function(e) {
+                        e.preventDefault();
+                        const token = localStorage.getItem('token');
+                        if (!token) {
+                            window.location.href = '/auth/login';
+                            return;
+                        }
+                        try {
+                            const res = await fetch('/auth/me', {
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            });
+                            if (res.status === 200) {
+                                window.location.href = '/fanfic/editor';
+                            } else {
+                                localStorage.removeItem('token');
+                                window.location.href = '/auth/login';
+                            }
+                        } catch {
+                            localStorage.removeItem('token');
+                            window.location.href = '/auth/login';
+                        }
+                    });
+                </script>
+            </div>
+        </header>
+
+        <% if (!fanfics || fanfics.length === 0) { %>
+            <section class="empty-state">
+                <h2>Ще немає фанфіків</h2>
+                <p>Створи перший текст і поділись ним з іншими.</p>
+            </section>
+        <% } else { %>
+            <main class="grid">
+                <% fanfics.forEach(fanfic => { %>
+                    <article class="card">
+                        <h2 class="card-title">
+                            <a href="/fanfic/<%= fanfic.fanfic_id %>"><%= fanfic.title %></a>
+                        </h2>
+                        <p class="card-description"><%= fanfic.description %></p>
+                        <div class="meta-row">
+                            <span>Rating: <%= fanfic.rating %></span>
+                            <span>Restriction: <%= fanfic.restriction %></span>
+                        </div>
+                    </article>
+                <% }) %>
+            </main>
+        <% } %>
+    </div>
 </body>
 </html>
