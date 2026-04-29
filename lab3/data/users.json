@@ -14,5 +14,29 @@
     "password": "$2b$10$oE/mbpXzzZn80HejJNGYCuliD66JUv1SoYMzQZPntO2dIcv/9RSPO",
     "is_admin": false,
     "is_active": true
+  },
+  {
+    "user_id": "f7279d2f-ccaa-4409-9f3b-3d941cbe1334",
+    "username": "fanficinator",
+    "email": "fanfic@gmail.com",
+    "password": "$2b$10$api8uSjmVANVm4FZxWReuuLpVUwrHkT7tDhHSQ4KekBSZyiNfsKXi",
+    "is_admin": false,
+    "is_active": true
+  },
+  {
+    "user_id": "4ad0f78f-7586-4fbe-900f-d0db9bc44ff3",
+    "username": "AnnaKuts",
+    "email": "k@lll.kpi.ua",
+    "password": "$2b$10$UrdWRgUyDbLSsd5baISy/uriYdML5I8Ykxbx.lNi/JQ2olFX77rqq",
+    "is_admin": false,
+    "is_active": true
+  },
+  {
+    "user_id": "336f818a-cbf5-43b7-88c2-d40e0ba05c97",
+    "username": "kolegasdokkpdsopd",
+    "email": "olenakrasyva@gmail.com",
+    "password": "$2b$10$V0PlHq.p8nGFLigdKq1kTO.wpSeJlqnIG4pK25hQNppxjdul3MZRO",
+    "is_admin": false,
+    "is_active": true
   }
 ]

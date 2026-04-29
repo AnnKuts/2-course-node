@@ -1,5 +1,5 @@
 import { Fanfic } from "../models/fanfic.ts";
-import { getAllSync, getAllFanficsAsync, getFanficByIdAsync, saveFanficAsync as repoSave } from '../repository/fanficRepo.ts';
+import { getAllSync, getAllFanficsAsync, getFanficByIdAsync, saveFanficAsync as repoSave, deleteFanficAsync } from '../repository/fanficRepo.ts';
 
 export const getAllFanfics = (): (Fanfic[] | []) => {
     console.log('Service: getAllFanfics called');
@@ -25,4 +25,8 @@ export const createAsync = async (fanfic: Omit<Fanfic, 'fanfic_id'>): Promise<Fa
 
 export const updateAsync = async (fanfic: Fanfic): Promise<void> => {
     await repoSave(fanfic);
+};
+
+export const deleteAsync = async (id: string): Promise<boolean> => {
+    return await deleteFanficAsync(id);
 };

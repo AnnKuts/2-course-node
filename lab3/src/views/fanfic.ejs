@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= fanfic.title %></title>
+    <link rel="stylesheet" href="/styles/fanfic.css">
+</head>
+<body>
+    <div class="fanfic-page">
+        
+        <div class="card fanfic-header">
+            <h1 class="fanfic-header__title"><%= fanfic.title %></h1>
+            <div class="fanfic-header__desc"><%- fanfic.description %></div>
+            
+            <div class="fanfic-meta">
+                <% if (fanfic.rating > 0) { %>
+                    <span class="fanfic-tag fanfic-tag--rating">Rating: <%= fanfic.rating.toFixed(1) %></span>
+                <% } %>
+                <% fanfic.genre.forEach(g => { %>
+                    <span class="fanfic-tag fanfic-tag--genre"><%= g %></span>
+                <% }) %>
+                <% if (fanfic.restriction) { %>
+                    <span class="fanfic-tag fanfic-tag--restriction"><%= fanfic.restriction %></span>
+                <% } %>
+            </div>
+
+            <div id="authorActions" class="fanfic-actions hidden">
+                <button class="btn btn--secondary" onclick="editFanfic()">Edit Fanfic</button>
+                <button class="btn btn--danger" onclick="deleteFanfic()">Delete Fanfic</button>
+            </div>
+        </div>
+
+        <div class="card fanfic-body">
+            <%- fanfic.content %>
+        </div>
+
+        <div class="card">
+            <div class="section-header">
+                <h2 class="section-header__title">Reviews</h2>
+            </div>
+            
+            <div class="section-body">
+                <% if (reviews && reviews.length > 0) { %>
+                    <% reviews.forEach(review => { %>
+                        <div class="list-item">
+                            <div class="list-item__header">
+                                <span><strong>User:</strong> <%= review.username %></span>
+                                <span><strong>Rating:</strong> <%= review.rating %>/5</span>
+                            </div>
+                            <div class="list-item__text"><%= review.comment %></div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="empty-state">No reviews yet. Be the first to leave one!</div>
+                <% } %>
+            </div>
+
+            <div class="form-box">
+                <h3 class="form-box__title">Leave a Review</h3>
+                <select id="reviewRating" class="form-input">
+                    <option value="5">★★★★★ - Excellent</option>
+                    <option value="4">★★★★☆ - Good</option>
+                    <option value="3">★★★☆☆ - Okay</option>
+                    <option value="2">★★☆☆☆ - Poor</option>
+                    <option value="1">★☆☆☆☆ - Bad</option>
+                </select>
+                <textarea id="reviewComment" class="form-input" placeholder="Write your review..."></textarea>
+                <button class="btn" onclick="submitReview()">Post Review</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-header">
+                <h2 class="section-header__title">Comments</h2>
+            </div>
+            
+            <div class="section-body">
+                <% if (comments && comments.length > 0) { %>
+                    <% comments.forEach(comment => { %>
+                        <div class="list-item">
+                            <div class="list-item__header">
+                                <span><strong>User:</strong> <%= comment.username %></span>
+                                <span><%= new Date(comment.created_at).toLocaleString() %></span>
+                            </div>
+                            <div class="list-item__text"><%= comment.text %></div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="empty-state">No comments yet. Join the conversation!</div>
+                <% } %>
+            </div>
+
+            <div class="form-box">
+                <h3 class="form-box__title">Leave a Comment</h3>
+                <textarea id="commentText" class="form-input" placeholder="Write a comment..."></textarea>
+                <button class="btn" onclick="submitComment()">Post Comment</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fanficId = '<%= fanfic.fanfic_id %>';
+        const pubId = '<%= fanfic.fanfic_id %>';
+
+        const authHeaders = () => {
+            const token = localStorage.getItem('token');
+            return token ? { 'Authorization': `Bearer ${token}` } : {};
+        };
+        
+        const reloadPage = () => window.location.reload();
+
+        try {
+            const token = localStorage.getItem('token');
+            if (token) {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                if (payload.user_id === '<%= fanfic.user_id %>') {
+                    const actionsDiv = document.getElementById('authorActions');
+                    if (actionsDiv) {
+                        actionsDiv.classList.remove('hidden');
+                    }
+                }
+            }
+        } catch(e) {
+            console.error('Error parsing token', e);
+        }
+
+        const editFanfic = () => window.location.href = `/fanfic/editor/${fanficId}`;
+
+        const deleteFanfic = async () => {
+            if (!confirm('Are you sure you want to delete this fanfic?')) return;
+            const res = await fetch(`/fanfic/${fanficId}`, {
+                method: 'DELETE',
+                headers: authHeaders()
+            });
+            if (res.ok) {
+                alert('Fanfic deleted');
+                window.location.href = '/';
+            } else {
+                const err = await res.json().catch(() => ({}));
+                alert('Failed to delete: ' + (err.error || 'Unknown error'));
+            }
+        };
+
+        const submitReview = async () => {
+            const comment = document.getElementById('reviewComment').value.trim();
+            const rating = document.getElementById('reviewRating').value;
+            
+            if (!comment) return alert('Please write a review comment');
+            if (!localStorage.getItem('token')) return alert('Not authenticated. Please login first.');
+
+            const res = await fetch('/review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                body: JSON.stringify({ pub_id: pubId, comment, rating: Number(rating) })
+            });
+
+            if (res.ok) reloadPage();
+            else {
+                const err = await res.json().catch(() => ({}));
+                alert('Failed to post review: ' + (err.error || 'Unknown error'));
+            }
+        };
+
+        const submitComment = async () => {
+            const text = document.getElementById('commentText').value.trim();
+            
+            if (!text) return alert('Please write a comment');
+            if (!localStorage.getItem('token')) return alert('Not authenticated. Please login first.');
+
+            const res = await fetch('/comment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                body: JSON.stringify({ fanfic_id: fanficId, text })
+            });
+
+            if (res.ok) reloadPage();
+            else {
+                const err = await res.json().catch(() => ({}));
+                alert('Failed to post comment: ' + (err.error || 'Unknown error'));
+            }
+        };
+
+        Object.assign(window, { submitReview, submitComment, editFanfic, deleteFanfic });
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+[
+  {
+    "review_id": "rev_001",
+    "pub_id": "mock_001",
+    "user_id": "efeb99e0-0d6a-40c9-badc-1e50c9b445b1",
+    "comment": "Захоплюючий сюжет, не міг відірватися до ранку!",
+    "rating": 5
+  },
+  {
+    "review_id": "rev_002",
+    "pub_id": "mock_001",
+    "user_id": "user_42",
+    "comment": "Цікава ідея з git-репозиторієм, але кінцівка передбачувана.",
+    "rating": 4
+  },
+  {
+    "review_id": "rev_003",
+    "pub_id": "mock_001",
+    "user_id": "user_mock",
+    "comment": "Технічні деталі на висоті, відчувається що автор знає тему.",
+    "rating": 5
+  },
+  {
+    "review_id": "325f97b3-8f8c-49d3-a4fd-07bba853b794",
+    "pub_id": "1777314474704",
+    "user_id": "336f818a-cbf5-43b7-88c2-d40e0ba05c97",
+    "comment": "I love that",
+    "rating": 5
+  },
+  {
+    "review_id": "729f6d72-4427-443a-9189-03347d09d74c",
+    "pub_id": "mock_001",
+    "user_id": "336f818a-cbf5-43b7-88c2-d40e0ba05c97",
+    "comment": "гг",
+    "rating": 5
+  },
+  {
+    "review_id": "89d19b3b-bbde-4c7f-b19b-8d34feee0e31",
+    "pub_id": "1777314474704",
+    "user_id": "336f818a-cbf5-43b7-88c2-d40e0ba05c97",
+    "comment": "Щдутфт",
+    "rating": 3
+  },
+  {
+    "review_id": "d55ed1d7-b9dc-4d1c-bc09-26d7b38a2e8f",
+    "pub_id": "1",
+    "user_id": "336f818a-cbf5-43b7-88c2-d40e0ba05c97",
+    "comment": "влвлв",
+    "rating": 2
+  },
+  {
+    "review_id": "5039bdff-4dd3-42ca-be41-2075d4113f72",
+    "pub_id": "1777315479105",
+    "user_id": "336f818a-cbf5-43b7-88c2-d40e0ba05c97",
+    "comment": "Імба",
+    "rating": 5
+  }
+]
