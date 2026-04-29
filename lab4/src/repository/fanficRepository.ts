@@ -62,8 +62,8 @@ export const create = async (fanfic: Partial<Fanfic>): Promise<string> => {
         await client.query('BEGIN');
 
         const insert = await client.query(
-            `INSERT INTO fanfics (title, description, reports, restriction, rating) VALUES ($1, $2, $3, $4, $5) RETURNING fanfic_id`,
-            [fanfic.title, fanfic.description, fanfic.reports || 0, fanfic.restriction || '0+', fanfic.rating || 0]
+            `INSERT INTO fanfics (user_id, title, description, reports, restriction, rating) VALUES ($1, $2, $3, $4, $5, $6) RETURNING fanfic_id`,
+            [fanfic.user_id || null, fanfic.title, fanfic.description, fanfic.reports || 0, fanfic.restriction || '0+', fanfic.rating || 0]
         );
         const newId = insert.rows[0].fanfic_id;
 
