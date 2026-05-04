@@ -1,5 +1,7 @@
 import { Fanfic } from '../models/fanfic.ts';
-import { getAll, getById, create, update } from '../repository/fanficRepository.ts';
+import { getAll, getById, create, update, deleteById } from '../repository/fanficRepository.ts';
+import { getReviewsByPubIdAsync } from '../repository/reviewRepo.ts';
+import { UUID } from 'node:crypto';
 
 export const getAllFanfics = async (): Promise<Fanfic[]> => {
     return await getAll();
@@ -34,4 +36,16 @@ export const updateAsync = async (id: string, patch: Partial<Fanfic>) => {
 export const checkTitleUnique = async (title: string): Promise<boolean> => {
     const allFanfics = await getAll();
     return !allFanfics.some(f => f.title.trim().toLowerCase() === title.trim().toLowerCase());
+};
+
+export const deleteAsync = async (id: string): Promise<boolean> => {
+    return await deleteById(id);
+};
+
+export const updateFanficRatingAsync = async (fanfic_id: UUID): Promise<void> => {
+    const reviews = await getReviewsByPubIdAsync(fanfic_id);
+    const averageRating = reviews.length > 0
+        ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
+        : 0;
+    await update(fanfic_id as string, { rating: averageRating });
 };
