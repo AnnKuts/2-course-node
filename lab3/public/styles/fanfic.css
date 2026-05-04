@@ -40,8 +40,14 @@ body {
 .btn--secondary:hover { background: #57606a; }
 .btn--danger { background: #cf222e; }
 .btn--danger:hover { background: #a40e26; }
+.btn--small { padding: 4px 10px; font-size: 12px; }
 
 .hidden { display: none !important; }
+
+.item-actions { display: flex; gap: 6px; margin-left: auto; }
+
+.edit-form { margin-top: 8px; display: flex; flex-direction: column; gap: 8px; }
+.edit-form__buttons { display: flex; gap: 8px; }
 
 .fanfic-header {
     padding: 24px;
