@@ -88,6 +88,11 @@ export const create = async (fanfic: Partial<Fanfic>): Promise<string> => {
     }
 };
 
+export const deleteById = async (id: string): Promise<boolean> => {
+    const result = await pool.query('DELETE FROM fanfics WHERE fanfic_id = $1', [id]);
+    return (result.rowCount ?? 0) > 0;
+};
+
 export const update = async (id: string, fanfic: Partial<Fanfic>): Promise<void> => {
     const client = await pool.connect();
     try {

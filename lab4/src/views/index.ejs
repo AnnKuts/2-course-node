@@ -12,10 +12,33 @@
                 <p>Свіжі історії від авторів спільноти</p>
             </div>
             <div class="hero-actions">
-                <a class="create-link secondary" href="/auth/login">Login</a>
-                <a class="create-link secondary" href="/auth/register">Register</a>
+                <a class="create-link secondary" id="loginLink" href="/auth/login" style="display:none;">Login</a>
+                <a class="create-link secondary" id="registerLink" href="/auth/register" style="display:none;">Register</a>
+                <button class="create-link" style="background-color: red; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; display: none;" id="logoutBtn">Logout</button>
                 <a class="create-link" href="#" id="createFanficBtn">Create fanfic</a>
-                <script>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const token = localStorage.getItem('token');
+                    const loginLink = document.getElementById('loginLink');
+                    const registerLink = document.getElementById('registerLink');
+                    const logoutBtn = document.getElementById('logoutBtn');
+
+                    if (token) {
+                        loginLink.style.display = 'none';
+                        registerLink.style.display = 'none';
+                        logoutBtn.style.display = 'inline-block';
+                    } else {
+                        loginLink.style.display = 'inline-block';
+                        registerLink.style.display = 'inline-block';
+                        logoutBtn.style.display = 'none';
+                    }
+
+                    logoutBtn.addEventListener('click', function() {
+                        localStorage.removeItem('token');
+                        window.location.href = '/';
+                    });
+
                     document.getElementById('createFanficBtn').addEventListener('click', async function(e) {
                         e.preventDefault();
                         const token = localStorage.getItem('token');
@@ -38,8 +61,14 @@
                             window.location.href = '/auth/login';
                         }
                     });
-                </script>
-            </div>
+
+                    document.addEventListener('visibilitychange', () => {
+                        if (document.visibilityState === 'visible') {
+                            window.location.reload();
+                        }
+                    });
+                });
+            </script>
         </header>
 
         <% if (!fanfics || fanfics.length === 0) { %>
@@ -56,7 +85,7 @@
                         </h2>
                         <p class="card-description"><%= fanfic.description %></p>
                         <div class="meta-row">
-                            <span>Rating: <%= fanfic.rating %></span>
+                            <span>Rating: <%= fanfic.rating.toFixed(1) %></span>
                             <span>Restriction: <%= fanfic.restriction %></span>
                         </div>
                     </article>
