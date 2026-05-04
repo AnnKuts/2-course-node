@@ -54,5 +54,13 @@
     "password": "$2b$10$446OPsm2F7U0Xi6LboZwJOZ2RkaWsc1QqzRByHZF/QX7YsdxHM3nS",
     "is_admin": false,
     "is_active": true
+  },
+  {
+    "user_id": "02002eba-549f-456e-8f90-a007a35111ba",
+    "username": "test",
+    "email": "test@test.com",
+    "password": "$2b$10$Rq3Z3ovhPJ9aDjUeWIysy.qm8ZorhwgCthaq6kIH930GaYoR6xOGC",
+    "is_admin": false,
+    "is_active": true
   }
 ]
