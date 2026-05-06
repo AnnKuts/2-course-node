@@ -103,7 +103,11 @@ export const deleteReviewController = async (
             return;
         }
 
-        await deleteAsync(review_id);
+        const deleted = await deleteAsync(review_id);
+        if (!deleted) {
+            res.status(404).json({ error: 'Review not found' });
+            return;
+        }
         await updateFanficRatingAsync(existing.pub_id);
         res.json({ message: 'Review deleted' });
     } catch (error) {
