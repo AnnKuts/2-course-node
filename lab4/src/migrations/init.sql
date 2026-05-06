@@ -47,7 +47,8 @@ CREATE TABLE IF NOT EXISTS reviews (
     pub_id UUID REFERENCES fanfics(fanfic_id) ON DELETE CASCADE,
     user_id UUID REFERENCES users(user_id) ON DELETE SET NULL,
     comment TEXT NOT NULL,
-    rating NUMERIC NOT NULL CHECK (rating >= 1 AND rating <= 5)
+    rating NUMERIC NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS comments (
