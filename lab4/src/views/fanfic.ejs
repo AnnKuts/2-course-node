@@ -49,8 +49,8 @@
                             <span><strong><%= review.username %></strong></span>
                             <span>★ <%= review.rating %>/5</span>
                             <span class="item-actions hidden">
-                                <button class="btn-small btn-secondary" onclick="startEditReview('<%= review.id %>', <%= review.rating %>)">Edit</button>
-                                <button class="btn-small btn-danger" onclick="deleteReview('<%= review.id %>')">Delete</button>
+                                <button class="btn-small btn-secondary" onclick="startEditReview('<%= review.review_id %>', <%= review.rating %>)">Edit</button>
+                                <button class="btn-small btn-danger" onclick="deleteReview('<%= review.review_id %>')">Delete</button>
                             </span>
                         </div>
                         <div class="list-item__text review-text"><%= review.comment %></div>
@@ -261,6 +261,7 @@
         };
 
         const deleteReview = async (id) => {
+            console.log('Attempting to delete review with id:', id);
             if (!confirm('Delete this review?')) return;
             const res = await fetch(`/review/${id}`, { method: 'DELETE', headers: authHeaders() });
             if (res.ok) window.location.reload();
