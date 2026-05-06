@@ -16,7 +16,7 @@ export const getByIdAsync = async (id: UUID): Promise<Review | null> => {
     return await getReviewByIdAsync(id);
 };
 
-export const createAsync = async (review: Omit<Review, 'id' | 'created_at'>): Promise<Review> => {
+export const createAsync = async (review: Omit<Review, 'review_id' | 'created_at'>): Promise<Review> => {
     return await insertReviewAsync(review);
 };
 

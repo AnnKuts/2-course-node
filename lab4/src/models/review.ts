@@ -1,7 +1,7 @@
 import { UUID } from "node:crypto";
 
 export interface Review {
-    id: UUID;
+    review_id: UUID;
     pub_id: UUID;
     user_id: UUID;
     comment: string;
