@@ -1,5 +1,5 @@
 {
-  "name": "lab3",
+  "name": "lab4",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -18,12 +18,12 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
-    "marked": "^15.0.12",
     "dotenv": "^17.3.1",
     "ejs": "^5.0.1",
     "express": "^5.2.1",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.3",
+    "marked": "^15.0.12",
     "pg": "^8.20.0"
   }
 }

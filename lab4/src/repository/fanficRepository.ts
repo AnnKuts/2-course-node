@@ -89,8 +89,18 @@ export const create = async (fanfic: Partial<Fanfic>): Promise<string> => {
 };
 
 export const deleteById = async (id: string): Promise<boolean> => {
-    const result = await pool.query('DELETE FROM fanfics WHERE fanfic_id = $1', [id]);
-    return (result.rowCount ?? 0) > 0;
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        const result = await client.query('DELETE FROM fanfics WHERE fanfic_id = $1', [id]);
+        await client.query('COMMIT');
+        return (result.rowCount ?? 0) > 0;
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
 };
 
 export const update = async (id: string, fanfic: Partial<Fanfic>): Promise<void> => {
