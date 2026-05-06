@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= fanfic.title %></title>
+    <link rel="stylesheet" href="/styles/fanfic.css">
+</head>
+<body>
+    <div class="page">
+
+        <div class="card card-header">
+            <div class="card-header__top">
+                <h1><%= fanfic.title %></h1>
+                <a href="/" class="btn btn-secondary">← Back</a>
+            </div>
+
+            <div class="card-header__desc"><%- fanfic.description %></div>
+
+            <div class="meta-row">
+                <% if (fanfic.rating > 0) { %>
+                    <span class="tag tag--rating">★ <%= fanfic.rating.toFixed(1) %></span>
+                <% } %>
+                <% fanfic.genre.forEach(g => { %>
+                    <span class="tag tag--genre"><%= g %></span>
+                <% }) %>
+                <% if (fanfic.restriction) { %>
+                    <span class="tag tag--restriction"><%= fanfic.restriction %></span>
+                <% } %>
+            </div>
+
+            <div id="authorActions" class="author-actions hidden">
+                <button class="btn btn-secondary" onclick="editFanfic()">Edit</button>
+                <button class="btn btn-danger" onclick="deleteFanfic()">Delete</button>
+            </div>
+        </div>
+
+        <div class="card card-content">
+            <%- fanfic.content %>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title">Reviews</h2>
+
+            <% if (reviews && reviews.length > 0) { %>
+                <% reviews.forEach(review => { %>
+                    <div class="list-item" data-review-id="<%= review.review_id %>" data-user-id="<%= review.user_id %>">
+                        <div class="list-item__header">
+                            <span><strong><%= review.username %></strong></span>
+                            <span>★ <%= review.rating %>/5</span>
+                            <span class="item-actions hidden">
+                                <button class="btn-small btn-secondary" onclick="startEditReview('<%= review.review_id %>', '<%= review.rating %>')">Edit</button>
+                                <button class="btn-small btn-danger" onclick="deleteReview('<%= review.review_id %>')">Delete</button>
+                            </span>
+                        </div>
+                        <div class="list-item__text review-text"><%= review.comment %></div>
+                        <div class="edit-form hidden">
+                            <select class="review-edit-rating">
+                                <option value="5">★★★★★ — Excellent</option>
+                                <option value="4">★★★★☆ — Good</option>
+                                <option value="3">★★★☆☆ — Okay</option>
+                                <option value="2">★★☆☆☆ — Poor</option>
+                                <option value="1">★☆☆☆☆ — Bad</option>
+                            </select>
+                            <textarea class="review-edit-comment"></textarea>
+                            <div class="edit-form__buttons">
+                                <button class="btn-small" onclick="saveReview('<%= review.review_id %>')">Save</button>
+                                <button class="btn-small btn-secondary" onclick="cancelEdit(this)">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="empty-state">No reviews yet. Be the first to leave one!</div>
+            <% } %>
+
+            <div class="form-section">
+                <label for="reviewRating">Rating</label>
+                <select id="reviewRating">
+                    <option value="5">★★★★★ — Excellent</option>
+                    <option value="4">★★★★☆ — Good</option>
+                    <option value="3">★★★☆☆ — Okay</option>
+                    <option value="2">★★☆☆☆ — Poor</option>
+                    <option value="1">★☆☆☆☆ — Bad</option>
+                </select>
+                <label for="reviewComment">Your review</label>
+                <textarea id="reviewComment" placeholder="Write your review..."></textarea>
+                <p id="reviewStatus" class="status"></p>
+                <button onclick="submitReview()">Post Review</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title">Comments</h2>
+
+            <% if (comments && comments.length > 0) { %>
+                <% comments.forEach(comment => { %>
+                    <div class="list-item" data-comment-id="<%= comment.comment_id %>" data-user-id="<%= comment.user_id %>">
+                        <div class="list-item__header">
+                            <span><strong><%= comment.username %></strong></span>
+                            <span><%= new Date(comment.created_at).toLocaleString() %></span>
+                            <span class="item-actions hidden">
+                                <button class="btn-small btn-secondary" onclick="startEditComment('<%= comment.comment_id %>')">Edit</button>
+                                <button class="btn-small btn-danger" onclick="deleteComment('<%= comment.comment_id %>')">Delete</button>
+                            </span>
+                        </div>
+                        <div class="list-item__text comment-text"><%= comment.text %></div>
+                        <div class="edit-form hidden">
+                            <textarea class="comment-edit-text"></textarea>
+                            <div class="edit-form__buttons">
+                                <button class="btn-small" onclick="saveComment('<%= comment.comment_id %>')">Save</button>
+                                <button class="btn-small btn-secondary" onclick="cancelEdit(this)">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="empty-state">No comments yet. Join the conversation!</div>
+            <% } %>
+
+            <div class="form-section">
+                <label for="commentText">Your comment</label>
+                <textarea id="commentText" placeholder="Write a comment..."></textarea>
+                <p id="commentStatus" class="status"></p>
+                <button onclick="submitComment()">Post Comment</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const fanficId = '<%= fanfic.fanfic_id %>';
+
+        const authHeaders = () => {
+            const token = localStorage.getItem('token');
+            return token ? { 'Authorization': `Bearer ${token}` } : {};
+        };
+
+        try {
+            const token = localStorage.getItem('token');
+            if (token) {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                if (payload.user_id === '<%= fanfic.user_id %>') {
+                    document.getElementById('authorActions').classList.remove('hidden');
+                }
+                document.querySelectorAll('[data-user-id]').forEach(el => {
+                    if (el.dataset.userId === payload.user_id) {
+                        el.querySelector('.item-actions')?.classList.remove('hidden');
+                    }
+                });
+            }
+        } catch (e) {}
+
+        const editFanfic = () => {
+            window.location.href = `/fanfic/editor/${fanficId}`;
+        };
+
+        const deleteFanfic = async () => {
+            if (!confirm('Are you sure you want to delete this fanfic?')) return;
+            const res = await fetch(`/fanfic/${fanficId}`, {
+                method: 'DELETE',
+                headers: authHeaders()
+            });
+            if (res.ok) {
+                window.location.href = '/';
+            } else {
+                const err = await res.json().catch(() => ({}));
+                alert('Failed to delete: ' + (err.error || 'Unknown error'));
+            }
+        };
+
+        const submitReview = async () => {
+            const comment = document.getElementById('reviewComment').value.trim();
+            const rating = document.getElementById('reviewRating').value;
+            const statusEl = document.getElementById('reviewStatus');
+            statusEl.textContent = '';
+
+            if (!comment) {
+                statusEl.className = 'status error';
+                statusEl.textContent = 'Please write a review';
+                return;
+            }
+            if (!localStorage.getItem('token')) {
+                statusEl.className = 'status error';
+                statusEl.textContent = 'You need to login first';
+                return;
+            }
+
+            const res = await fetch('/review', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                body: JSON.stringify({ pub_id: fanficId, comment, rating: Number(rating) })
+            });
+
+            if (res.ok) {
+                window.location.reload();
+            } else {
+                const err = await res.json().catch(() => ({}));
+                statusEl.className = 'status error';
+                statusEl.textContent = err.error || 'Failed to post review';
+            }
+        };
+
+        const submitComment = async () => {
+            const text = document.getElementById('commentText').value.trim();
+            const statusEl = document.getElementById('commentStatus');
+            statusEl.textContent = '';
+
+            if (!text) {
+                statusEl.className = 'status error';
+                statusEl.textContent = 'Please write a comment';
+                return;
+            }
+            if (!localStorage.getItem('token')) {
+                statusEl.className = 'status error';
+                statusEl.textContent = 'You need to login first';
+                return;
+            }
+
+            const res = await fetch('/comment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                body: JSON.stringify({ fanfic_id: fanficId, text })
+            });
+
+            if (res.ok) {
+                window.location.reload();
+            } else {
+                const err = await res.json().catch(() => ({}));
+                statusEl.className = 'status error';
+                statusEl.textContent = err.error || 'Failed to post comment';
+            }
+        };
+
+        const startEditReview = (id, rating) => {
+            console.log('id', id)
+            console.log('rating', rating)
+            const item = document.querySelector(`[data-review-id="${id}"]`);
+            const textEl = item.querySelector('.review-text');
+            const form = item.querySelector('.edit-form');
+            form.querySelector('.review-edit-rating').value = rating;
+            form.querySelector('.review-edit-comment').value = textEl.textContent.trim();
+            textEl.classList.add('hidden');
+            form.classList.remove('hidden');
+        };
+
+        const saveReview = async (id) => {
+            const item = document.querySelector(`[data-review-id="${id}"]`);
+            const form = item.querySelector('.edit-form');
+            const comment = form.querySelector('.review-edit-comment').value.trim();
+            const rating = Number(form.querySelector('.review-edit-rating').value);
+            if (!comment) return alert('Review text cannot be empty');
+            const res = await fetch(`/review/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                body: JSON.stringify({ comment, rating })
+            });
+            if (res.ok) window.location.reload();
+            else {
+                const err = await res.json().catch(() => ({}));
+                alert('Failed to update review: ' + (err.error || 'Unknown error'));
+            }
+        };
+
+        const deleteReview = async (id) => {
+            console.log('Attempting to delete review with id:', id);
+            if (!confirm('Delete this review?')) return;
+            const res = await fetch(`/review/${id}`, { method: 'DELETE', headers: authHeaders() });
+            if (res.ok) window.location.reload();
+            else {
+                const err = await res.json().catch(() => ({}));
+                alert('Failed to delete review: ' + (err.error || 'Unknown error'));
+            }
+        };
+
+        const startEditComment = (id) => {
+            const item = document.querySelector(`[data-comment-id="${id}"]`);
+            const textEl = item.querySelector('.comment-text');
+            const form = item.querySelector('.edit-form');
+            form.querySelector('.comment-edit-text').value = textEl.textContent.trim();
+            textEl.classList.add('hidden');
+            form.classList.remove('hidden');
+        };
+
+        const saveComment = async (id) => {
+            const item = document.querySelector(`[data-comment-id="${id}"]`);
+            const text = item.querySelector('.comment-edit-text').value.trim();
+            if (!text) return alert('Comment cannot be empty');
+            const res = await fetch(`/comment/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                body: JSON.stringify({ text })
+            });
+            if (res.ok) window.location.reload();
+            else {
+                const err = await res.json().catch(() => ({}));
+                alert('Failed to update comment: ' + (err.error || 'Unknown error'));
+            }
+        };
+
+        const deleteComment = async (id) => {
+            if (!confirm('Delete this comment?')) return;
+            const res = await fetch(`/comment/${id}`, { method: 'DELETE', headers: authHeaders() });
+            if (res.ok) window.location.reload();
+            else {
+                const err = await res.json().catch(() => ({}));
+                alert('Failed to delete comment: ' + (err.error || 'Unknown error'));
+            }
+        };
+
+        const cancelEdit = (btn) => {
+            const form = btn.closest('.edit-form');
+            const item = form.closest('.list-item');
+            form.classList.add('hidden');
+            item.querySelector('.review-text, .comment-text')?.classList.remove('hidden');
+        };
+    </script>
+</body>
+</html>

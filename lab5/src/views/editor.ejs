@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fanfic Editor</title>
+    <link rel="stylesheet" href="/styles/createEdit.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="editor">
+            <div class="meta">
+                <% if (fanfic.fanfic_id) { %>
+                <input type="hidden" id="fanficId" value="<%= fanfic.fanfic_id %>">
+                <% } %>
+                <input type="text" id="title" value="<%= fanfic.title %>" placeholder="Title" required>
+                <input type="text" id="desc" value="<%= fanfic.description %>" placeholder="Description">
+                <select id="genre" multiple size="8" required>
+                    <option value="Fantasy" <%= fanfic.genre && fanfic.genre.includes('Fantasy') ? 'selected' : '' %>>Fantasy</option>
+                    <option value="Romance" <%= fanfic.genre && fanfic.genre.includes('Romance') ? 'selected' : '' %>>Romance</option>
+                    <option value="Drama" <%= fanfic.genre && fanfic.genre.includes('Drama') ? 'selected' : '' %>>Drama</option>
+                    <option value="Comedy" <%= fanfic.genre && fanfic.genre.includes('Comedy') ? 'selected' : '' %>>Comedy</option>
+                    <option value="Action" <%= fanfic.genre && fanfic.genre.includes('Action') ? 'selected' : '' %>>Action</option>
+                    <option value="Mystery" <%= fanfic.genre && fanfic.genre.includes('Mystery') ? 'selected' : '' %>>Mystery</option>
+                    <option value="Sci-Fi" <%= fanfic.genre && fanfic.genre.includes('Sci-Fi') ? 'selected' : '' %>>Sci-Fi</option>
+                    <option value="Horror" <%= fanfic.genre && fanfic.genre.includes('Horror') ? 'selected' : '' %>>Horror</option>
+                </select>
+                <label for="restriction">Вікове обмеження:</label>
+                <select name="restriction" id="restriction" required>
+                    <option value="0+" <%= fanfic.restriction === '0+' ? 'selected' : '' %>>0+</option>
+                    <option value="12+" <%= fanfic.restriction === '12+' ? 'selected' : '' %>>12+</option>
+                    <option value="16+" <%= fanfic.restriction === '16+' ? 'selected' : '' %>>16+</option>
+                    <option value="18+" <%= fanfic.restriction === '18+' ? 'selected' : '' %>>18+</option>
+                </select>
+            </div>
+            <textarea id="content" placeholder="Write your fanfic here..."><%= fanfic.content %></textarea>
+        </div>
+        <div class="preview">
+            <h3 id="previewTitle"><%= fanfic.title %></h3>
+            <p id="previewDesc"><%= fanfic.description %></p>
+            <div id="preview"></div>
+        </div>
+    </div>
+    <div class="toolbar">
+        <button onclick="saveFanfic()">Save</button>
+    </div>
+    <script>
+        const content = document.getElementById('content');
+        const preview = document.getElementById('preview');
+        const title = document.getElementById('title');
+        const desc = document.getElementById('desc');
+
+        const updatePreview = () => {
+            preview.innerHTML = marked.parse(content.value);
+            document.getElementById('previewTitle').textContent = title.value || 'Title';
+            document.getElementById('previewDesc').textContent = desc.value || 'Description';
+        };
+        content.addEventListener('input', updatePreview);
+        title.addEventListener('input', updatePreview);
+        desc.addEventListener('input', updatePreview);
+        updatePreview();
+
+        const saveFanfic = async () => {
+            const genreSelect = document.getElementById('genre');
+            const selectedGenres = Array.from(genreSelect.selectedOptions).map(opt => opt.value);
+            if (!selectedGenres.length) {
+                alert('Please select at least one genre');
+                return;
+            }
+
+            const fanficIdInput = document.getElementById('fanficId');
+            const fanficId = fanficIdInput ? fanficIdInput.value : null;
+            const isUpdate = !!fanficId;
+            const method = isUpdate ? 'PUT' : 'POST';
+            const url = isUpdate ? `/fanfic/${fanficId}` : '/fanfic';
+
+            const data = {
+                title: title.value,
+                description: desc.value,
+                genre: selectedGenres,
+                content: content.value,
+                restriction: document.getElementById('restriction').value
+            };
+
+            const token = localStorage.getItem('token');
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+
+            const res = await fetch(url, {
+                method,
+                headers,
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                const result = await res.json();
+                alert(isUpdate ? 'Updated!' : 'Created!');
+                window.location.href = '/';
+            } else {
+                const error = await res.json();
+                alert('Save failed! ' + (error.error || error.message || 'Unknown error'));
+            }
+        };
+        window.saveFanfic = saveFanfic;
+    </script>
+</body>
+</html>
