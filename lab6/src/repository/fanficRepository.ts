@@ -4,7 +4,7 @@ import { FanficModel, GenreModel, FanficContentModel } from '../models/associati
 import { Fanfic } from '../models/fanfic.ts';
 
 const INCLUDE_ALL = [
-    { model: GenreModel, through: { attributes: [] } },
+    { model: GenreModel, as: 'Genres', through: { attributes: [] } },
     { model: FanficContentModel },
 ];
 
@@ -49,13 +49,15 @@ export const create = async (fanfic: Partial<Fanfic>): Promise<string> => {
         }
 
         if (Array.isArray(fanfic.genre) && fanfic.genre.length > 0) {
+            const genres = [] as GenreModel[];
             for (const name of fanfic.genre) {
                 const [genre] = await GenreModel.findOrCreate({
                     where: { name },
                     transaction: t,
                 });
-                await (created as any).addGenre(genre, { transaction: t });
+                genres.push(genre);
             }
+            await (created as any).setGenres(genres, { transaction: t });
         }
 
         return created.fanfic_id;
@@ -85,13 +87,15 @@ export const update = async (id: string, fanfic: Partial<Fanfic>): Promise<void>
         if (fanfic.genre !== undefined) {
             await (existing as any).setGenres([], { transaction: t });
             if (Array.isArray(fanfic.genre) && fanfic.genre.length > 0) {
+                const genres = [] as GenreModel[];
                 for (const name of fanfic.genre) {
                     const [genre] = await GenreModel.findOrCreate({
                         where: { name },
                         transaction: t,
                     });
-                    await (existing as any).addGenre(genre, { transaction: t });
+                    genres.push(genre);
                 }
+                await (existing as any).setGenres(genres, { transaction: t });
             }
         }
     });
@@ -118,6 +122,7 @@ export const getFanficsFiltered = async (
 
     const genreInclude: any = {
         model: GenreModel,
+    as: 'Genres',
         through: { attributes: [] },
         ...(genre ? { where: { name: genre }, required: true } : {}),
     };

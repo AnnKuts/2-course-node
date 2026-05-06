@@ -10,11 +10,13 @@ UserModel.hasMany(FanficModel, { foreignKey: 'user_id' });
 FanficModel.belongsTo(UserModel, { foreignKey: 'user_id' });
 
 FanficModel.belongsToMany(GenreModel, {
+    as: 'Genres',
     through: FanficGenreModel,
     foreignKey: 'fanfic_id',
     otherKey: 'genre_id',
 });
 GenreModel.belongsToMany(FanficModel, {
+    as: 'Fanfics',
     through: FanficGenreModel,
     foreignKey: 'genre_id',
     otherKey: 'fanfic_id',
