@@ -1,4 +1,4 @@
-import { pool } from '../db.js';
+import { pool } from '../db.ts';
 import { User } from '../models/user.ts';
 import { randomUUID } from 'crypto';
 
@@ -34,17 +34,25 @@ export const createUser = async (
     hashedPassword: string
 ): Promise<User> => {
     const user_id = randomUUID();
+    const client = await pool.connect();
     try {
-        const result = await pool.query(
+        await client.query('BEGIN');
+
+        const result = await client.query(
             `INSERT INTO users (user_id, username, email, password, is_admin, is_active)
              VALUES ($1, $2, $3, $4, $5, $6)
              RETURNING user_id, username, email, password, is_admin, is_active`,
             [user_id, username, email, hashedPassword, false, true]
         );
+
+        await client.query('COMMIT');
         return result.rows[0];
     } catch (error) {
+        await client.query('ROLLBACK');
         console.error('Error creating user:', error);
         throw error;
+    } finally {
+        client.release();
     }
 };
 

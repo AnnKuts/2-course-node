@@ -12,24 +12,6 @@ export const getReviewByIdAsync = async (id: UUID): Promise<Review | null> => {
     return result.rows.length > 0 ? result.rows[0] : null;
 };
 
-export const insertReviewAsync = async (review: Omit<Review, 'review_id' | 'created_at'>): Promise<Review> => {
-    const client = await pool.connect();
-    try {
-        await client.query('BEGIN');
-        const result = await client.query(
-            'INSERT INTO reviews (pub_id, user_id, comment, rating) VALUES ($1, $2, $3, $4) RETURNING *',
-            [review.pub_id, review.user_id, review.comment, review.rating]
-        );
-        await client.query('COMMIT');
-        return result.rows[0];
-    } catch (err) {
-        await client.query('ROLLBACK');
-        throw err;
-    } finally {
-        client.release();
-    }
-};
-
 export const updateReviewAsync = async (review: Review): Promise<void> => {
     const client = await pool.connect();
     try {
