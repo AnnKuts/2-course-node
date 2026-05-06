@@ -18,21 +18,51 @@ export const getCommentByIdAsync = async (comment_id: UUID): Promise<Comment | n
 export const insertCommentAsync = async (
     comment: Omit<Comment, 'comment_id' | 'created_at'>
 ): Promise<Comment> => {
-    const result = await pool.query(
-        'INSERT INTO comments (comment_id, fanfic_id, user_id, text, created_at) VALUES ($1, $2, $3, $4, NOW()) RETURNING *',
-        [randomUUID(), comment.fanfic_id, comment.user_id, comment.text]
-    );
-    return result.rows[0];
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        const result = await client.query(
+            'INSERT INTO comments (comment_id, fanfic_id, user_id, text, created_at) VALUES ($1, $2, $3, $4, NOW()) RETURNING *',
+            [randomUUID(), comment.fanfic_id, comment.user_id, comment.text]
+        );
+        await client.query('COMMIT');
+        return result.rows[0];
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
 };
 
 export const updateCommentAsync = async (comment: Comment): Promise<void> => {
-    await pool.query(
-        'UPDATE comments SET text = $1 WHERE comment_id = $2',
-        [comment.text, comment.comment_id]
-    );
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        await client.query(
+            'UPDATE comments SET text = $1 WHERE comment_id = $2',
+            [comment.text, comment.comment_id]
+        );
+        await client.query('COMMIT');
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
 };
 
 export const deleteCommentAsync = async (comment_id: UUID): Promise<boolean> => {
-    const result = await pool.query('DELETE FROM comments WHERE comment_id = $1', [comment_id]);
-    return (result.rowCount ?? 0) > 0;
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        const result = await client.query('DELETE FROM comments WHERE comment_id = $1', [comment_id]);
+        await client.query('COMMIT');
+        return (result.rowCount ?? 0) > 0;
+    } catch (err) {
+        await client.query('ROLLBACK');
+        throw err;
+    } finally {
+        client.release();
+    }
 };
