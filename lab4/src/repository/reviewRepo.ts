@@ -8,11 +8,11 @@ export const getReviewsByPubIdAsync = async (pub_id: UUID): Promise<Review[]> =>
 };
 
 export const getReviewByIdAsync = async (id: UUID): Promise<Review | null> => {
-    const result = await pool.query('SELECT * FROM reviews WHERE id = $1', [id]);
+    const result = await pool.query('SELECT * FROM reviews WHERE review_id = $1', [id]);
     return result.rows.length > 0 ? result.rows[0] : null;
 };
 
-export const insertReviewAsync = async (review: Omit<Review, 'id' | 'created_at'>): Promise<Review> => {
+export const insertReviewAsync = async (review: Omit<Review, 'review_id' | 'created_at'>): Promise<Review> => {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
@@ -35,8 +35,8 @@ export const updateReviewAsync = async (review: Review): Promise<void> => {
     try {
         await client.query('BEGIN');
         await client.query(
-            'UPDATE reviews SET comment = $1, rating = $2 WHERE id = $3',
-            [review.comment, review.rating, review.id]
+            'UPDATE reviews SET comment = $1, rating = $2 WHERE review_id = $3',
+            [review.comment, review.rating, review.review_id]
         );
         await client.query('COMMIT');
     } catch (err) {
@@ -51,7 +51,7 @@ export const deleteReviewAsync = async (id: UUID): Promise<boolean> => {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
-        const result = await client.query('DELETE FROM reviews WHERE id = $1', [id]);
+    const result = await client.query('DELETE FROM reviews WHERE review_id = $1', [id]);
         await client.query('COMMIT');
         return (result.rowCount ?? 0) > 0;
     } catch (err) {
