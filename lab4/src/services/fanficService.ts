@@ -45,7 +45,7 @@ export const deleteAsync = async (id: string): Promise<boolean> => {
 export const updateFanficRatingAsync = async (fanfic_id: UUID): Promise<void> => {
     const reviews = await getReviewsByPubIdAsync(fanfic_id);
     const averageRating = reviews.length > 0
-        ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
+    ? reviews.reduce((acc, r) => acc + Number(r.rating), 0) / reviews.length
         : 0;
     await update(fanfic_id as string, { rating: averageRating });
 };

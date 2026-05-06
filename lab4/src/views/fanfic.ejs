@@ -44,13 +44,13 @@
 
             <% if (reviews && reviews.length > 0) { %>
                 <% reviews.forEach(review => { %>
-                    <div class="list-item" data-review-id="<%= review.id %>" data-user-id="<%= review.user_id %>">
+                    <div class="list-item" data-review-id="<%= review.review_id %>" data-user-id="<%= review.user_id %>">
                         <div class="list-item__header">
                             <span><strong><%= review.username %></strong></span>
                             <span>★ <%= review.rating %>/5</span>
                             <span class="item-actions hidden">
-                                <button class="btn-small btn-secondary" onclick="startEditReview('<%= review.id %>', <%= review.rating %>)">Edit</button>
-                                <button class="btn-small btn-danger" onclick="deleteReview('<%= review.id %>')">Delete</button>
+                                <button class="btn-small btn-secondary" onclick="startEditReview('<%= review.review_id %>', '<%= review.rating %>')">Edit</button>
+                                <button class="btn-small btn-danger" onclick="deleteReview('<%= review.review_id %>')">Delete</button>
                             </span>
                         </div>
                         <div class="list-item__text review-text"><%= review.comment %></div>
@@ -64,7 +64,7 @@
                             </select>
                             <textarea class="review-edit-comment"></textarea>
                             <div class="edit-form__buttons">
-                                <button class="btn-small" onclick="saveReview('<%= review.id %>')">Save</button>
+                                <button class="btn-small" onclick="saveReview('<%= review.review_id %>')">Save</button>
                                 <button class="btn-small btn-secondary" onclick="cancelEdit(this)">Cancel</button>
                             </div>
                         </div>
@@ -233,6 +233,8 @@
         };
 
         const startEditReview = (id, rating) => {
+            console.log('id', id)
+            console.log('rating', rating)
             const item = document.querySelector(`[data-review-id="${id}"]`);
             const textEl = item.querySelector('.review-text');
             const form = item.querySelector('.edit-form');
@@ -261,6 +263,7 @@
         };
 
         const deleteReview = async (id) => {
+            console.log('Attempting to delete review with id:', id);
             if (!confirm('Delete this review?')) return;
             const res = await fetch(`/review/${id}`, { method: 'DELETE', headers: authHeaders() });
             if (res.ok) window.location.reload();
