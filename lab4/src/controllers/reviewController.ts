@@ -3,7 +3,7 @@ import { UUID } from 'node:crypto';
 import {
     getByPubIdAsync,
     getByIdAsync,
-    createAsync,
+    createReviewAndUpdateRatingTx,
     updateAsync,
     deleteAsync,
 } from '../services/reviewService.ts';
@@ -42,8 +42,10 @@ export const createReviewController = async (
     }
 
     try {
-        const review = await createAsync({ pub_id: pub_id as UUID, user_id, comment, rating: numericRating });
-        await updateFanficRatingAsync(pub_id as UUID);
+        const review = await createReviewAndUpdateRatingTx(
+            { pub_id: pub_id as UUID, user_id, comment, rating: numericRating },
+            true
+        );
         res.status(201).json({ review, message: 'Review created' });
     } catch (error) {
         console.error('createReview error:', error);
