@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="/styles/auth.css">
+</head>
+<body>
+    <div class="page">
+        <div class="auth-card">
+            <h1>Register</h1>
+            <p class="subtitle">Create an account to publish and review fanfics.</p>
+
+            <form id="registerForm" class="form">
+                <label for="username">Username</label>
+                <input id="username" name="username" type="text" placeholder="Your name" required>
+
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="you@example.com" required>
+
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" minlength="6" placeholder="At least 6 characters" required>
+
+                <button type="submit">Create account</button>
+            </form>
+
+            <p id="status" class="status" aria-live="polite"></p>
+
+            <div class="links">
+                <a href="/auth/login">Already have an account?</a>
+                <a href="/">Back to home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('registerForm');
+        const statusEl = document.getElementById('status');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            statusEl.textContent = '';
+
+            const payload = {
+                username: document.getElementById('username').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value
+            };
+
+            const res = await fetch('/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json().catch(() => ({}));
+
+            if (res.ok && data.token) {
+                localStorage.setItem('token', data.token);
+                statusEl.className = 'status ok';
+                statusEl.textContent = 'Account created. Redirecting...';
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 500);
+                return;
+            }
+
+            statusEl.className = 'status error';
+            statusEl.textContent = data.message || 'Registration failed';
+        });
+    </script>
+</body>
+</html>
