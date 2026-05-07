@@ -122,9 +122,9 @@ export const getFanficsFiltered = async (
 
     const genreInclude: any = {
         model: GenreModel,
-    as: 'Genres',
+        as: 'Genres',
         through: { attributes: [] },
-        ...(genre ? { where: { name: genre }, required: true } : {}),
+        ...(genre ? { where: { name: { [Op.iLike]: genre } }, required: true } : {}),
     };
 
     const { rows, count } = await FanficModel.findAndCountAll({

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="uk">
 <head>
+    <meta charset="UTF-8" />
     <title><%= title %></title>
     <link rel="stylesheet" href="/styles/index.css">
 </head>
 <body>
     <div class="page">
+
         <header class="hero">
             <div>
                 <h1>Останні фанфіки</h1>
@@ -14,84 +16,235 @@
             <div class="hero-actions">
                 <a class="create-link secondary" id="loginLink" href="/auth/login" style="display:none;">Login</a>
                 <a class="create-link secondary" id="registerLink" href="/auth/register" style="display:none;">Register</a>
-                <button class="create-link" style="background-color: red; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; display: none;" id="logoutBtn">Logout</button>
+                <button class="create-link btn-logout" id="logoutBtn" style="display:none;">Logout</button>
                 <a class="create-link" href="#" id="createFanficBtn">Create fanfic</a>
             </div>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const token = localStorage.getItem('token');
-                    const loginLink = document.getElementById('loginLink');
-                    const registerLink = document.getElementById('registerLink');
-                    const logoutBtn = document.getElementById('logoutBtn');
-
-                    if (token) {
-                        loginLink.style.display = 'none';
-                        registerLink.style.display = 'none';
-                        logoutBtn.style.display = 'inline-block';
-                    } else {
-                        loginLink.style.display = 'inline-block';
-                        registerLink.style.display = 'inline-block';
-                        logoutBtn.style.display = 'none';
-                    }
-
-                    logoutBtn.addEventListener('click', function() {
-                        localStorage.removeItem('token');
-                        window.location.href = '/';
-                    });
-
-                    document.getElementById('createFanficBtn').addEventListener('click', async function(e) {
-                        e.preventDefault();
-                        const token = localStorage.getItem('token');
-                        if (!token) {
-                            window.location.href = '/auth/login';
-                            return;
-                        }
-                        try {
-                            const res = await fetch('/auth/me', {
-                                headers: { 'Authorization': `Bearer ${token}` }
-                            });
-                            if (res.status === 200) {
-                                window.location.href = '/fanfics/editor';
-                            } else {
-                                localStorage.removeItem('token');
-                                window.location.href = '/auth/login';
-                            }
-                        } catch {
-                            localStorage.removeItem('token');
-                            window.location.href = '/auth/login';
-                        }
-                    });
-
-                    document.addEventListener('visibilitychange', () => {
-                        if (document.visibilityState === 'visible') {
-                            window.location.reload();
-                        }
-                    });
-                });
-            </script>
         </header>
 
-        <% if (!fanfics || fanfics.length === 0) { %>
-            <section class="empty-state">
-                <h2>Ще немає фанфіків</h2>
-                <p>Створи перший текст і поділись ним з іншими.</p>
-            </section>
-        <% } else { %>
-            <main class="grid">
-                <% fanfics.forEach(fanfic => { %>
-                    <article class="card">
-                        <h2 class="card-title">
-                            <a href="/fanfics/<%= fanfic.fanfic_id %>"><%= fanfic.title %></a>
-                        </h2>
-                        <p class="card-description"><%= fanfic.description %></p>
-                        <div class="meta-row">
-                            <span>Rating: <%= fanfic.rating.toFixed(1) %></span>
-                            <span>Restriction: <%= fanfic.restriction %></span>
-                        </div>
-                    </article>
-                <% }) %>
-            </main>
-        <% } %>
-    </div>
+        <section class="filters-bar">
+            <div class="search-wrap">
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="filter-input search-input"
+                    placeholder="Пошук за назвою…"
+                    autocomplete="off"
+                />
+            </div>
+            <div class="filter-controls">
+                <select id="genreSelect" class="filter-input filter-select">
+                    <option value="">Усі жанри</option>
+                    <option value="romance">Romance</option>
+                    <option value="adventure">Adventure</option>
+                    <option value="fantasy">Fantasy</option>
+                    <option value="sci-fi">Sci-Fi</option>
+                    <option value="horror">Horror</option>
+                    <option value="mystery">Mystery</option>
+                    <option value="drama">Drama</option>
+                    <option value="comedy">Comedy</option>
+                </select>
+                <select id="restrictionSelect" class="filter-input filter-select">
+                    <option value="">Будь-яке обмеження</option>
+                    <option value="0+">0+</option>
+                    <option value="12+">12+</option>
+                    <option value="16+">16+</option>
+                    <option value="18+">18+</option>
+                </select>
+                <div class="rating-wrap">
+                    <label for="minRatingInput" class="rating-label">Мін. рейтинг:</label>
+                    <input
+                        type="number"
+                        id="minRatingInput"
+                        class="filter-input rating-input"
+                        min="0" max="5" step="0.5"
+                        placeholder="0"
+                    />
+                </div>
+                <button id="resetFiltersBtn" class="filter-reset-btn">✕ Скинути</button>
+            </div>
+        </section>
+
+        <main id="fanficsGrid" class="grid"></main>
+
+        <section id="emptyState" class="empty-state" style="display:none;">
+            <h2>Нічого не знайдено</h2>
+            <p>Спробуй змінити фільтри або пошуковий запит.</p>
+        </section>
+
+        <nav id="pagination" class="pagination" aria-label="Pagination"></nav>
+
+
+
+    <script>
+    (function () {
+        'use strict';
+
+        let currentPage = 1;
+        const LIMIT = 9;
+        let debounceTimer = null;
+
+        const grid              = document.getElementById('fanficsGrid');
+        const emptyState        = document.getElementById('emptyState');
+        const paginationNav     = document.getElementById('pagination');
+        const searchInput       = document.getElementById('searchInput');
+        const genreSelect       = document.getElementById('genreSelect');
+        const restrictionSelect = document.getElementById('restrictionSelect');
+        const minRatingInput    = document.getElementById('minRatingInput');
+        const resetBtn          = document.getElementById('resetFiltersBtn');
+        const loginLink         = document.getElementById('loginLink');
+        const registerLink      = document.getElementById('registerLink');
+        const logoutBtn         = document.getElementById('logoutBtn');
+        const createBtn         = document.getElementById('createFanficBtn');
+
+        const token = localStorage.getItem('token');
+        if (token) {
+            logoutBtn.style.display = 'inline-block';
+        } else {
+            loginLink.style.display   = 'inline-block';
+            registerLink.style.display = 'inline-block';
+        }
+
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+        });
+
+        createBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const t = localStorage.getItem('token');
+            if (!t) { window.location.href = '/auth/login'; return; }
+            try {
+                const r = await fetch('/auth/me', { headers: { Authorization: `Bearer ${t}` } });
+                if (r.status === 200) {
+                    window.location.href = '/fanfics/editor';
+                } else {
+                    localStorage.removeItem('token');
+                    window.location.href = '/auth/login';
+                }
+            } catch {
+                localStorage.removeItem('token');
+                window.location.href = '/auth/login';
+            }
+        });
+
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function buildQuery(page) {
+            const p = new URLSearchParams();
+            p.set('page',  page);
+            p.set('limit', LIMIT);
+            const search      = searchInput.value.trim();
+            const genre       = genreSelect.value;
+            const restriction = restrictionSelect.value;
+            const minRating   = minRatingInput.value.trim();
+            if (search)             p.set('search',      search);
+            if (genre)              p.set('genre',       genre);
+            if (restriction)        p.set('restriction', restriction);
+            if (minRating !== '')   p.set('minRating',   minRating);
+            return p.toString();
+        }
+
+        function renderCard(fanfic) {
+            const article = document.createElement('article');
+            article.className = 'card';
+            article.innerHTML = `
+                <h2 class="card-title">
+                    <a href="/fanfics/${escapeHtml(fanfic.fanfic_id)}">${escapeHtml(fanfic.title)}</a>
+                </h2>
+                <p class="card-description">${escapeHtml(fanfic.description)}</p>
+                <div class="meta-row">
+                    <span>Rating: ${Number(fanfic.rating ?? 0).toFixed(1)}</span>
+                    <span>Restriction: ${escapeHtml(fanfic.restriction)}</span>
+                </div>
+            `;
+            return article;
+        }
+
+        function renderPagination(pag) {
+            paginationNav.innerHTML = '';
+            const { page, totalPages } = pag;
+            if (!totalPages || totalPages <= 1) return;
+
+            function mkBtn(label, targetPage, disabled, active) {
+                const b = document.createElement('button');
+                b.textContent = label;
+                b.className   = 'page-btn' + (active ? ' page-btn--active' : '');
+                b.disabled    = disabled;
+                b.addEventListener('click', () => { currentPage = targetPage; fetchFanfics(); });
+                return b;
+            }
+
+            paginationNav.appendChild(mkBtn('←', page - 1, page === 1, false));
+
+            const delta = 2;
+            let prevWasDots = false;
+            for (let i = 1; i <= totalPages; i++) {
+                const inRange = i === 1 || i === totalPages || (i >= page - delta && i <= page + delta);
+                if (inRange) {
+                    prevWasDots = false;
+                    paginationNav.appendChild(mkBtn(i, i, false, i === page));
+                } else if (!prevWasDots) {
+                    prevWasDots = true;
+                    const dots = document.createElement('span');
+                    dots.textContent = '…';
+                    dots.className   = 'page-dots';
+                    paginationNav.appendChild(dots);
+                }
+            }
+
+            paginationNav.appendChild(mkBtn('→', page + 1, page === totalPages, false));
+        }
+
+        async function fetchFanfics() {
+            const query = buildQuery(currentPage);
+            try {
+                const res  = await fetch(`/fanfics?${query}`);
+                if (!res.ok) throw new Error('server error');
+                const json    = await res.json();
+                const fanfics = json.data        ?? [];
+                const pag     = json.pagination  ?? {};
+
+                grid.innerHTML = '';
+
+                if (fanfics.length === 0) {
+                    grid.style.display      = 'none';
+                    emptyState.style.display = '';
+                } else {
+                    grid.style.display      = '';
+                    emptyState.style.display = 'none';
+                    fanfics.forEach(f => grid.appendChild(renderCard(f)));
+                }
+
+                renderPagination(pag);
+            } catch {
+                grid.innerHTML = '<p style="color:red;padding:16px">Помилка завантаження даних.</p>';
+            }
+        }
+
+        function onFilterChange() { currentPage = 1; fetchFanfics(); }
+        function onSearchInput()  { clearTimeout(debounceTimer); debounceTimer = setTimeout(onFilterChange, 350); }
+
+        searchInput.addEventListener('input',  onSearchInput);
+        minRatingInput.addEventListener('input', onSearchInput);
+        genreSelect.addEventListener('change',       onFilterChange);
+        restrictionSelect.addEventListener('change', onFilterChange);
+
+        resetBtn.addEventListener('click', () => {
+            searchInput.value       = '';
+            genreSelect.value       = '';
+            restrictionSelect.value = '';
+            minRatingInput.value    = '';
+            onFilterChange();
+        });
+
+        fetchFanfics();
+    })();
+    </script>
 </body>
 </html>
