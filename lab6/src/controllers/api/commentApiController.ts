@@ -9,7 +9,7 @@ import {
 } from '../../services/commentService.ts'
 import { AuthenticatedRequest } from '../../middleware/authMiddleware.ts'
 
-/** GET /api/v1/fanfics/:id/comments */
+
 export const listCommentsController = async (
   req: AuthenticatedRequest,
   res: Response
@@ -22,7 +22,7 @@ export const listCommentsController = async (
   }
 }
 
-/** POST /api/v1/comments */
+
 export const createCommentController = async (
   req: AuthenticatedRequest,
   res: Response
@@ -53,7 +53,7 @@ export const createCommentController = async (
   }
 }
 
-/** PUT /api/v1/comments/:id */
+
 export const updateCommentController = async (
   req: AuthenticatedRequest,
   res: Response
@@ -84,7 +84,7 @@ export const updateCommentController = async (
   }
 }
 
-/** DELETE /api/v1/comments/:id */
+
 export const deleteCommentController = async (
   req: AuthenticatedRequest,
   res: Response

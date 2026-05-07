@@ -25,7 +25,7 @@ export const deleteAsync = async (id: UUID): Promise<boolean> => {
   return await deleteReviewAsync(id)
 }
 
-// forceFail — прапорець для демонстрації відкату транзакції.
+
 export const createReviewAndUpdateRatingTx = async (
   input: Omit<Review, 'review_id' | 'created_at'>,
   forceFail: boolean = false

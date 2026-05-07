@@ -10,7 +10,7 @@ import {
 import { updateFanficRatingAsync } from '../../services/fanficService.ts'
 import { AuthenticatedRequest } from '../../middleware/authMiddleware.ts'
 
-/** GET /api/v1/fanfics/:id/reviews */
+
 export const listReviewsController = async (
   req: AuthenticatedRequest,
   res: Response
@@ -23,7 +23,7 @@ export const listReviewsController = async (
   }
 }
 
-/** POST /api/v1/reviews */
+
 export const createReviewController = async (
   req: AuthenticatedRequest,
   res: Response
@@ -54,7 +54,7 @@ export const createReviewController = async (
   }
 }
 
-/** PUT /api/v1/reviews/:id */
+
 export const updateReviewController = async (
   req: AuthenticatedRequest,
   res: Response
@@ -92,7 +92,7 @@ export const updateReviewController = async (
   }
 }
 
-/** DELETE /api/v1/reviews/:id */
+
 export const deleteReviewController = async (
   req: AuthenticatedRequest,
   res: Response

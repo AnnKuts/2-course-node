@@ -11,7 +11,7 @@ import {
 } from '../../services/fanficService.ts'
 import { getByFanficIdAsync as getCommentsByFanficId } from '../../services/commentService.ts'
 import { getByPubIdAsync as getReviewsByFanficId } from '../../services/reviewService.ts'
-import { getAllUsers } from '../../repository/userRepo.ts'
+import { getAllUsersService } from '../../services/userService.ts'
 import { AuthenticatedRequest } from '../../middleware/authMiddleware.ts'
 import { UUID } from 'node:crypto'
 
@@ -30,18 +30,7 @@ export const renderHomeController = async (
   }
 }
 
-/**
- * GET /api/v1/fanfics
- * Фільтрація + пагінація.
- *
- * Query params:
- *   page        (default 1)
- *   limit       (default 10, max 100)
- *   genre       — точна назва жанру
- *   restriction — рівень обмежень (0+, 12+, 16+, 18+)
- *   minRating   — мінімальний рейтинг
- *   search      — пошук у назві (ILIKE)
- */
+
 export const listFanficsController = async (
   req: Request,
   res: Response
@@ -90,7 +79,7 @@ export const listFanficsController = async (
   }
 }
 
-/** GET /api/v1/fanfics/:id */
+
 export const getFanficController = async (
   req: Request,
   res: Response
@@ -107,7 +96,7 @@ export const getFanficController = async (
   }
 }
 
-/** POST /api/v1/fanfics */
+
 export const createFanficController = async (
   req: AuthenticatedRequest,
   res: Response
@@ -141,7 +130,7 @@ export const createFanficController = async (
   }
 }
 
-/** PUT /api/v1/fanfics/:id */
+
 export const updateFanficController = async (
   req: AuthenticatedRequest,
   res: Response
@@ -167,7 +156,7 @@ export const updateFanficController = async (
   }
 }
 
-/** DELETE /api/v1/fanfics/:id */
+
 export const deleteFanficController = async (
   req: AuthenticatedRequest,
   res: Response
@@ -192,7 +181,7 @@ export const deleteFanficController = async (
   }
 }
 
-/** GET /fanfics/:id - Renders fanfic detail page */
+
 export const fanficPageController = async (
   req: Request,
   res: Response
@@ -204,7 +193,7 @@ export const fanficPageController = async (
       getByIdAsync(id),
       getCommentsByFanficId(id),
       getReviewsByFanficId(id as UUID),
-      getAllUsers(),
+      getAllUsersService(),
     ])
 
     if (!fanfic) {
@@ -236,7 +225,7 @@ export const fanficPageController = async (
   }
 }
 
-/** GET /fanfics/editor or /fanfics/editor/:id - Renders editor page */
+
 export const editorPageController = async (
   req: Request,
   res: Response

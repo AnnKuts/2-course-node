@@ -4,7 +4,7 @@ import { getAllFanfics, getByIdAsync, createAsync, updateAsync, deleteAsync } fr
 import { getByFanficIdAsync as getCommentsByFanficId } from '../services/commentService.ts';
 import { getByPubIdAsync as getReviewsByFanficId } from '../services/reviewService.ts';
 import { AuthenticatedRequest } from '../middleware/authMiddleware.ts';
-import { getAllUsersSync } from '../repository/userRepo.ts';
+import { getAllUsersServiceSync } from '../services/userService.ts';
 import { UUID } from 'node:crypto';
 
 export const getAllFanficsController = (req: Request, res: Response) => {
@@ -30,7 +30,7 @@ export const fanficPageController = async (req: Request, res: Response): Promise
         return;
     }
 
-    const users = getAllUsersSync();
+    const users = getAllUsersServiceSync();
     const userMap = new Map(users.map(u => [u.user_id, u.username]));
 
     const mappedComments = comments.map(c => ({...c, username: userMap.get(c.user_id) || 'Unknown Author'}));

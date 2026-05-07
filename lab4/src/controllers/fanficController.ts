@@ -3,7 +3,7 @@ import { getAllFanfics, getByIdAsync, createAsync, updateAsync, deleteAsync, che
 import { getById } from '../repository/fanficRepository.ts';
 import { getByFanficIdAsync as getCommentsByFanficId } from '../services/commentService.ts';
 import { getByPubIdAsync as getReviewsByFanficId } from '../services/reviewService.ts';
-import { getAllUsers } from '../repository/userRepo.ts';
+import { getAllUsersServiceAsync } from '../services/userService.ts';
 import { AuthenticatedRequest } from '../middleware/authMiddleware.ts';
 import { Request, Response } from 'express';
 import { UUID } from 'node:crypto';
@@ -77,7 +77,7 @@ export const fanficPageController = async (req: Request, res: Response): Promise
         getByIdAsync(id),
         getCommentsByFanficId(id),
         getReviewsByFanficId(id as UUID),
-        getAllUsers(),
+        getAllUsersServiceAsync(),
     ]);
 
     if (!fanfic) {
