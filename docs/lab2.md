@@ -159,6 +159,21 @@ http://localhost:3000
 
 ---
 
+## Flow Summary
+
+The request flow in Lab2 is:
+
+1. `src/server.ts` initializes an Express app, static files, and EJS.
+2. A browser sends an HTTP request (for example, `/`, `/team`, or `/main.html`).
+3. Express matches the route and either:
+   - renders an EJS template with dynamic data, or
+   - returns a static file from `public/`.
+4. The server responds with HTML/CSS/images, and the browser renders the page.
+
+This lab introduces the first full client-server web flow using Express routing and template rendering.
+
+---
+
 ## Conclusion
 
 During this laboratory work, a web application was created using Node.js and Express.js.
