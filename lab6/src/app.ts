@@ -2,10 +2,9 @@ import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import fanficRoutes from './routes/routes.ts';
 import apiRoutes from './routes/apiRoutes.ts';
 import sequelize from './sequelize.ts';
-import './models/associations.ts'; // реєструє всі моделі та зв'язки між ними
+import './models/associations.ts';
 
 const app = express();
 const PORT = 3000;
@@ -20,8 +19,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use('/', fanficRoutes);
-app.use('/api/v1', apiRoutes);
+app.use('/', apiRoutes);
 
 sequelize.authenticate()
     .then(() => {

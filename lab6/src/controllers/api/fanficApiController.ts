@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { UUID } from 'node:crypto';
 import {
+    getAllFanfics,
     getFanficsFilteredAsync,
     getByIdAsync,
     createAsync,
@@ -9,6 +9,18 @@ import {
     checkTitleUnique,
 } from '../../services/fanficService.ts';
 import { AuthenticatedRequest } from '../../middleware/authMiddleware.ts';
+
+export const renderHomeController = async (_req: Request, res: Response): Promise<void> => {
+    try {
+        const fanfics = await getAllFanfics();
+        res.render('index', {
+            title: 'Fanfics',
+            fanfics,
+        });
+    } catch {
+        res.status(500).send('Failed to retrieve fanfics');
+    }
+};
 
 /**
  * GET /api/v1/fanfics

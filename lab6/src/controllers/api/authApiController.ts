@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { registerUser, loginUser } from '../services/authService.ts';
-import { AuthenticatedRequest } from '../middleware/authMiddleware.ts';
+import { registerUser, loginUser } from '../../services/authService.ts';
+import { AuthenticatedRequest } from '../../middleware/authMiddleware.ts';
 
 export const registerController = async (req: Request, res: Response): Promise<void> => {
     const { username, email, password } = req.body as {
@@ -10,7 +10,7 @@ export const registerController = async (req: Request, res: Response): Promise<v
     };
 
     if (!username || !email || !password) {
-        res.status(400).json({ message: 'username, email, and password are required' });
+        res.status(400).json({ error: 'username, email, and password are required' });
         return;
     }
 
@@ -20,7 +20,7 @@ export const registerController = async (req: Request, res: Response): Promise<v
     } catch (error) {
         const message = error instanceof Error ? error.message : 'Registration failed';
         const statusCode = message === 'Email already exists' ? 409 : 500;
-        res.status(statusCode).json({ message });
+        res.status(statusCode).json({ error: message });
     }
 };
 
@@ -31,7 +31,7 @@ export const loginController = async (req: Request, res: Response): Promise<void
     };
 
     if (!email || !password) {
-        res.status(400).json({ message: 'email and password are required' });
+        res.status(400).json({ error: 'email and password are required' });
         return;
     }
 
@@ -41,17 +41,17 @@ export const loginController = async (req: Request, res: Response): Promise<void
     } catch (error) {
         const message = error instanceof Error ? error.message : 'Login failed';
         const statusCode = message === 'Invalid credentials' || message === 'User is inactive' ? 401 : 500;
-        res.status(statusCode).json({ message });
+        res.status(statusCode).json({ error: message });
     }
 };
 
 export const meController = (req: AuthenticatedRequest, res: Response): void => {
     if (!req.user) {
-        res.status(401).json({ message: 'Unauthorized' });
+        res.status(401).json({ error: 'Unauthorized' });
         return;
     }
 
-    res.status(200).json({ user: req.user });
+    res.status(200).json({ data: req.user });
 };
 
 export const logoutController = (req: Request, res: Response): void => {
