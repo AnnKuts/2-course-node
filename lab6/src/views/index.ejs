@@ -51,7 +51,7 @@
                                 headers: { 'Authorization': `Bearer ${token}` }
                             });
                             if (res.status === 200) {
-                                window.location.href = '/fanfic/editor';
+                                window.location.href = '/fanfics/editor';
                             } else {
                                 localStorage.removeItem('token');
                                 window.location.href = '/auth/login';
@@ -81,7 +81,7 @@
                 <% fanfics.forEach(fanfic => { %>
                     <article class="card">
                         <h2 class="card-title">
-                            <a href="/fanfic/<%= fanfic.fanfic_id %>"><%= fanfic.title %></a>
+                            <a href="/fanfics/<%= fanfic.fanfic_id %>"><%= fanfic.title %></a>
                         </h2>
                         <p class="card-description"><%= fanfic.description %></p>
                         <div class="meta-row">

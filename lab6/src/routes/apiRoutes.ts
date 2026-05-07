@@ -4,7 +4,8 @@ import { authenticateToken } from '../middleware/authMiddleware.ts';
 import {
     renderHomeController,
     listFanficsController,
-    getFanficController,
+    fanficPageController,
+    editorPageController,
     createFanficController,
     updateFanficController,
     deleteFanficController,
@@ -43,7 +44,9 @@ router.get('/auth/me', authenticateToken, meController);
 router.post('/auth/logout', logoutController);
 
 router.get('/fanfics', listFanficsController);
-router.get('/fanfics/:id',  getFanficController);
+router.get('/fanfics/editor', editorPageController);
+router.get('/fanfics/editor/:id', editorPageController);
+router.get('/fanfics/:id', fanficPageController);
 router.post('/fanfics',     authenticateToken, createFanficController);
 router.put('/fanfics/:id',  authenticateToken, updateFanficController);
 router.delete('/fanfics/:id', authenticateToken, deleteFanficController);

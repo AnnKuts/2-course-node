@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { marked } from 'marked';
 import {
     getAllFanfics,
     getFanficsFilteredAsync,
@@ -8,7 +9,11 @@ import {
     deleteAsync,
     checkTitleUnique,
 } from '../../services/fanficService.ts';
+import { getByFanficIdAsync as getCommentsByFanficId } from '../../services/commentService.ts';
+import { getByPubIdAsync as getReviewsByFanficId } from '../../services/reviewService.ts';
+import { getAllUsers } from '../../repository/userRepo.ts';
 import { AuthenticatedRequest } from '../../middleware/authMiddleware.ts';
+import { UUID } from 'node:crypto';
 
 export const renderHomeController = async (_req: Request, res: Response): Promise<void> => {
     try {
@@ -150,5 +155,68 @@ export const deleteFanficController = async (req: AuthenticatedRequest, res: Res
         res.status(200).json({ message: 'Fanfic deleted' });
     } catch {
         res.status(500).json({ error: 'Failed to delete fanfic' });
+    }
+};
+
+/** GET /fanfics/:id - Renders fanfic detail page */
+export const fanficPageController = async (req: Request, res: Response): Promise<void> => {
+    const id = String(req.params.id);
+
+    try {
+        const [fanfic, comments, reviews, users] = await Promise.all([
+            getByIdAsync(id),
+            getCommentsByFanficId(id),
+            getReviewsByFanficId(id as UUID),
+            getAllUsers(),
+        ]);
+
+        if (!fanfic) {
+            res.status(404).send('Fanfic not found');
+            return;
+        }
+
+        const userMap = new Map(users.map(u => [u.user_id, u.username]));
+        const mappedComments = comments.map(c => ({ ...c, username: userMap.get(c.user_id) || 'Unknown Author' }));
+        const mappedReviews = reviews.map(r => ({ ...r, username: userMap.get(r.user_id) || 'Unknown Author' }));
+
+        fanfic.description = await marked.parse(fanfic.description ?? '');
+        fanfic.content = await marked.parse(fanfic.content || '');
+
+        res.render('fanfic', { fanfic, comments: mappedComments, reviews: mappedReviews });
+    } catch (error) {
+        console.error('Error rendering fanfic page:', error);
+        res.status(500).send('Failed to load fanfic');
+    }
+};
+
+/** GET /fanfics/editor or /fanfics/editor/:id - Renders editor page */
+export const editorPageController = async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id as string | undefined;
+    let fanfic = null;
+
+    try {
+        if (id) {
+            fanfic = await getByIdAsync(id);
+            if (!fanfic) {
+                res.status(404).send('Fanfic not found');
+                return;
+            }
+        }
+        res.render('editor', {
+            fanfic: fanfic || {
+                fanfic_id: undefined,
+                user_id: '',
+                title: '',
+                description: '',
+                content: '',
+                genre: '',
+                restriction: '0+',
+                rating: 0,
+                reports: 0
+            }
+        });
+    } catch (error) {
+        console.error('Error rendering editor page:', error);
+        res.status(500).send('Failed to load editor');
     }
 };
