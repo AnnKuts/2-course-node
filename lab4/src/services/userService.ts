@@ -1,6 +1,9 @@
 import { getAllUsers } from '../repository/userRepo.ts';
 import { User } from '../models/user.ts';
 
-export const getAllUsersServiceAsync = async (): Promise<User[]> => {
-    return await getAllUsers();
+type PublicUser = Pick<User, 'id' | 'username'>;
+
+export const getAllUsersServiceAsync = async (): Promise<PublicUser[]> => {
+    const users = await getAllUsers();
+    return users.map(({ id, username }) => ({ id, username }));
 };
