@@ -71,7 +71,7 @@
             const fanficId = fanficIdInput ? fanficIdInput.value : null;
             const isUpdate = !!fanficId;
             const method = isUpdate ? 'PUT' : 'POST';
-            const url = isUpdate ? `/fanfic/${fanficId}` : '/fanfic';
+            const url = isUpdate ? `/fanfics/${fanficId}` : '/fanfics';
 
             const data = {
                 title: title.value,

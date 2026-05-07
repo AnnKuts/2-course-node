@@ -1,14 +1,34 @@
-import { Request, Response } from 'express';
-import { UUID } from 'node:crypto';
+import { Request, Response } from 'express'
+import { marked } from 'marked'
 import {
-    getFanficsFilteredAsync,
-    getByIdAsync,
-    createAsync,
-    updateAsync,
-    deleteAsync,
-    checkTitleUnique,
-} from '../../services/fanficService.ts';
-import { AuthenticatedRequest } from '../../middleware/authMiddleware.ts';
+  getAllFanfics,
+  getFanficsFilteredAsync,
+  getByIdAsync,
+  createAsync,
+  updateAsync,
+  deleteAsync,
+  checkTitleUnique,
+} from '../../services/fanficService.ts'
+import { getByFanficIdAsync as getCommentsByFanficId } from '../../services/commentService.ts'
+import { getByPubIdAsync as getReviewsByFanficId } from '../../services/reviewService.ts'
+import { getAllUsers } from '../../repository/userRepo.ts'
+import { AuthenticatedRequest } from '../../middleware/authMiddleware.ts'
+import { UUID } from 'node:crypto'
+
+export const renderHomeController = async (
+  _req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const fanfics = await getAllFanfics()
+    res.render('index', {
+      title: 'Fanfics',
+      fanfics,
+    })
+  } catch {
+    res.status(500).send('Failed to retrieve fanfics')
+  }
+}
 
 /**
  * GET /api/v1/fanfics
@@ -22,121 +42,231 @@ import { AuthenticatedRequest } from '../../middleware/authMiddleware.ts';
  *   minRating   — мінімальний рейтинг
  *   search      — пошук у назві (ILIKE)
  */
-export const listFanficsController = async (req: Request, res: Response): Promise<void> => {
-    const page  = Math.max(1, parseInt(req.query.page  as string) || 1);
-    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 10));
-    const genre       = (req.query.genre       as string) || undefined;
-    const restriction = (req.query.restriction as string) || undefined;
-    const minRating   = req.query.minRating !== undefined ? Number(req.query.minRating) : undefined;
-    const search      = (req.query.search      as string) || undefined;
+export const listFanficsController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const page = Math.max(1, parseInt(req.query.page as string) || 1)
+  const limit = Math.min(
+    100,
+    Math.max(1, parseInt(req.query.limit as string) || 10)
+  )
+  const genre = (req.query.genre as string) || undefined
+  const restriction = (req.query.restriction as string) || undefined
+  const minRating =
+    req.query.minRating !== undefined ? Number(req.query.minRating) : undefined
+  const search = (req.query.search as string) || undefined
 
-    if (minRating !== undefined && (isNaN(minRating) || minRating < 0 || minRating > 5)) {
-        res.status(400).json({ error: 'minRating must be a number between 0 and 5' });
-        return;
-    }
+  if (
+    minRating !== undefined &&
+    (isNaN(minRating) || minRating < 0 || minRating > 5)
+  ) {
+    res
+      .status(400)
+      .json({ error: 'minRating must be a number between 0 and 5' })
+    return
+  }
 
-    try {
-        const { rows, count } = await getFanficsFilteredAsync({ page, limit, genre, restriction, minRating, search });
-        res.status(200).json({
-            data: rows,
-            pagination: {
-                total: count,
-                page,
-                limit,
-                totalPages: Math.ceil(count / limit),
-            },
-        });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to retrieve fanfics' });
-    }
-};
+  try {
+    const { rows, count } = await getFanficsFilteredAsync({
+      page,
+      limit,
+      genre,
+      restriction,
+      minRating,
+      search,
+    })
+    res.status(200).json({
+      data: rows,
+      pagination: {
+        total: count,
+        page,
+        limit,
+        totalPages: Math.ceil(count / limit),
+      },
+    })
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to retrieve fanfics' })
+  }
+}
 
 /** GET /api/v1/fanfics/:id */
-export const getFanficController = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const fanfic = await getByIdAsync(String(req.params.id));
-        if (!fanfic) {
-            res.status(404).json({ error: 'Fanfic not found' });
-            return;
-        }
-        res.status(200).json({ data: fanfic });
-    } catch {
-        res.status(500).json({ error: 'Failed to retrieve fanfic' });
+export const getFanficController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const fanfic = await getByIdAsync(String(req.params.id))
+    if (!fanfic) {
+      res.status(404).json({ error: 'Fanfic not found' })
+      return
     }
-};
+    res.status(200).json({ data: fanfic })
+  } catch {
+    res.status(500).json({ error: 'Failed to retrieve fanfic' })
+  }
+}
 
 /** POST /api/v1/fanfics */
-export const createFanficController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const { title, genre } = req.body;
-    const user_id = req.user?.user_id;
+export const createFanficController = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  const { title, genre } = req.body
+  const user_id = req.user?.user_id
 
-    if (!user_id) {
-        res.status(401).json({ error: 'Unauthorized' });
-        return;
-    }
-    if (!title || typeof title !== 'string' || title.trim().length < 3) {
-        res.status(400).json({ error: 'title must be at least 3 characters' });
-        return;
-    }
-    if (!genre) {
-        res.status(400).json({ error: 'genre is required' });
-        return;
-    }
+  if (!user_id) {
+    res.status(401).json({ error: 'Unauthorized' })
+    return
+  }
+  if (!title || typeof title !== 'string' || title.trim().length < 3) {
+    res.status(400).json({ error: 'title must be at least 3 characters' })
+    return
+  }
+  if (!genre) {
+    res.status(400).json({ error: 'genre is required' })
+    return
+  }
 
-    try {
-        const isUnique = await checkTitleUnique(title);
-        if (!isUnique) {
-            res.status(409).json({ error: 'Fanfic with this title already exists' });
-            return;
-        }
-        const id = await createAsync({ ...req.body, user_id });
-        res.status(201).json({ fanfic_id: id, message: 'Fanfic created' });
-    } catch (err) {
-        res.status(500).json({ error: 'Failed to create fanfic' });
+  try {
+    const isUnique = await checkTitleUnique(title)
+    if (!isUnique) {
+      res.status(409).json({ error: 'Fanfic with this title already exists' })
+      return
     }
-};
+    const id = await createAsync({ ...req.body, user_id })
+    res.status(201).json({ fanfic_id: id, message: 'Fanfic created' })
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to create fanfic' })
+  }
+}
 
 /** PUT /api/v1/fanfics/:id */
-export const updateFanficController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const id = String(req.params.id);
-    const user_id = req.user?.user_id;
+export const updateFanficController = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  const id = String(req.params.id)
+  const user_id = req.user?.user_id
 
-    try {
-        const existing = await getByIdAsync(id);
-        if (!existing) {
-            res.status(404).json({ error: 'Fanfic not found' });
-            return;
-        }
-        if (existing.user_id !== user_id) {
-            res.status(403).json({ error: 'Only the author can edit this fanfic' });
-            return;
-        }
-        await updateAsync(id, req.body);
-        res.status(200).json({ message: 'Fanfic updated' });
-    } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Update failed';
-        res.status(500).json({ error: msg });
+  try {
+    const existing = await getByIdAsync(id)
+    if (!existing) {
+      res.status(404).json({ error: 'Fanfic not found' })
+      return
     }
-};
+    if (existing.user_id !== user_id) {
+      res.status(403).json({ error: 'Only the author can edit this fanfic' })
+      return
+    }
+    await updateAsync(id, req.body)
+    res.status(200).json({ message: 'Fanfic updated' })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Update failed'
+    res.status(500).json({ error: msg })
+  }
+}
 
 /** DELETE /api/v1/fanfics/:id */
-export const deleteFanficController = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-    const id = String(req.params.id);
-    const user_id = req.user?.user_id;
+export const deleteFanficController = async (
+  req: AuthenticatedRequest,
+  res: Response
+): Promise<void> => {
+  const id = String(req.params.id)
+  const user_id = req.user?.user_id
 
-    try {
-        const existing = await getByIdAsync(id);
-        if (!existing) {
-            res.status(404).json({ error: 'Fanfic not found' });
-            return;
-        }
-        if (existing.user_id !== user_id) {
-            res.status(403).json({ error: 'Only the author can delete this fanfic' });
-            return;
-        }
-        await deleteAsync(id);
-        res.status(200).json({ message: 'Fanfic deleted' });
-    } catch {
-        res.status(500).json({ error: 'Failed to delete fanfic' });
+  try {
+    const existing = await getByIdAsync(id)
+    if (!existing) {
+      res.status(404).json({ error: 'Fanfic not found' })
+      return
     }
-};
+    if (existing.user_id !== user_id) {
+      res.status(403).json({ error: 'Only the author can delete this fanfic' })
+      return
+    }
+    await deleteAsync(id)
+    res.status(200).json({ message: 'Fanfic deleted' })
+  } catch {
+    res.status(500).json({ error: 'Failed to delete fanfic' })
+  }
+}
+
+/** GET /fanfics/:id - Renders fanfic detail page */
+export const fanficPageController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const id = String(req.params.id)
+
+  try {
+    const [fanfic, comments, reviews, users] = await Promise.all([
+      getByIdAsync(id),
+      getCommentsByFanficId(id),
+      getReviewsByFanficId(id as UUID),
+      getAllUsers(),
+    ])
+
+    if (!fanfic) {
+      res.status(404).send('Fanfic not found')
+      return
+    }
+
+    const userMap = new Map(users.map((u) => [u.user_id, u.username]))
+    const mappedComments = comments.map((c) => ({
+      ...c,
+      username: userMap.get(c.user_id) || 'Unknown Author',
+    }))
+    const mappedReviews = reviews.map((r) => ({
+      ...r,
+      username: userMap.get(r.user_id) || 'Unknown Author',
+    }))
+
+    fanfic.description = await marked.parse(fanfic.description ?? '')
+    fanfic.content = await marked.parse(fanfic.content || '')
+
+    res.render('fanfic', {
+      fanfic,
+      comments: mappedComments,
+      reviews: mappedReviews,
+    })
+  } catch (error) {
+    console.error('Error rendering fanfic page:', error)
+    res.status(500).send('Failed to load fanfic')
+  }
+}
+
+/** GET /fanfics/editor or /fanfics/editor/:id - Renders editor page */
+export const editorPageController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const id = req.params.id as string | undefined
+  let fanfic = null
+
+  try {
+    if (id) {
+      fanfic = await getByIdAsync(id)
+      if (!fanfic) {
+        res.status(404).send('Fanfic not found')
+        return
+      }
+    }
+    res.render('editor', {
+      fanfic: fanfic || {
+        fanfic_id: undefined,
+        user_id: '',
+        title: '',
+        description: '',
+        content: '',
+        genre: '',
+        restriction: '0+',
+        rating: 0,
+        reports: 0,
+      },
+    })
+  } catch (error) {
+    console.error('Error rendering editor page:', error)
+    res.status(500).send('Failed to load editor')
+  }
+}
