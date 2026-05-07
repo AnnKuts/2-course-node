@@ -1,59 +1,74 @@
-import { Request, Response } from 'express';
-import { registerUser, loginUser } from '../../services/authService.ts';
-import { AuthenticatedRequest } from '../../middleware/authMiddleware.ts';
+import { Request, Response } from 'express'
+import { registerUser, loginUser } from '../../services/authService.ts'
+import { AuthenticatedRequest } from '../../middleware/authMiddleware.ts'
 
-export const registerController = async (req: Request, res: Response): Promise<void> => {
-    const { username, email, password } = req.body as {
-        username?: string;
-        email?: string;
-        password?: string;
-    };
+export const registerController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { username, email, password } = req.body as {
+    username?: string
+    email?: string
+    password?: string
+  }
 
-    if (!username || !email || !password) {
-        res.status(400).json({ error: 'username, email, and password are required' });
-        return;
-    }
+  if (!username || !email || !password) {
+    res
+      .status(400)
+      .json({ error: 'username, email, and password are required' })
+    return
+  }
 
-    try {
-        const result = await registerUser(username, email, password);
-        res.status(201).json(result);
-    } catch (error) {
-        const message = error instanceof Error ? error.message : 'Registration failed';
-        const statusCode = message === 'Email already exists' ? 409 : 500;
-        res.status(statusCode).json({ error: message });
-    }
-};
+  try {
+    const result = await registerUser(username, email, password)
+    res.status(201).json(result)
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'Registration failed'
+    const statusCode = message === 'Email already exists' ? 409 : 500
+    res.status(statusCode).json({ error: message })
+  }
+}
 
-export const loginController = async (req: Request, res: Response): Promise<void> => {
-    const { email, password } = req.body as {
-        email?: string;
-        password?: string;
-    };
+export const loginController = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { email, password } = req.body as {
+    email?: string
+    password?: string
+  }
 
-    if (!email || !password) {
-        res.status(400).json({ error: 'email and password are required' });
-        return;
-    }
+  if (!email || !password) {
+    res.status(400).json({ error: 'email and password are required' })
+    return
+  }
 
-    try {
-        const result = await loginUser(email, password);
-        res.status(200).json(result);
-    } catch (error) {
-        const message = error instanceof Error ? error.message : 'Login failed';
-        const statusCode = message === 'Invalid credentials' || message === 'User is inactive' ? 401 : 500;
-        res.status(statusCode).json({ error: message });
-    }
-};
+  try {
+    const result = await loginUser(email, password)
+    res.status(200).json(result)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Login failed'
+    const statusCode =
+      message === 'Invalid credentials' || message === 'User is inactive'
+        ? 401
+        : 500
+    res.status(statusCode).json({ error: message })
+  }
+}
 
-export const meController = (req: AuthenticatedRequest, res: Response): void => {
-    if (!req.user) {
-        res.status(401).json({ error: 'Unauthorized' });
-        return;
-    }
+export const meController = (
+  req: AuthenticatedRequest,
+  res: Response
+): void => {
+  if (!req.user) {
+    res.status(401).json({ error: 'Unauthorized' })
+    return
+  }
 
-    res.status(200).json({ data: req.user });
-};
+  res.status(200).json({ data: req.user })
+}
 
 export const logoutController = (req: Request, res: Response): void => {
-    res.status(200).json({ message: 'Logged out successfully' });
-};
+  res.status(200).json({ message: 'Logged out successfully' })
+}
