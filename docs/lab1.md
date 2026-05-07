@@ -80,6 +80,19 @@ During this laboratory work, Node.js was successfully installed and configured. 
 
 ---
 
+## Flow Summary
+
+The execution flow in Lab1 is straightforward:
+
+1. Node.js is installed from the official website.
+2. The runtime is verified in terminal (`node -v`, `npm -v`).
+3. A basic console script is created.
+4. The script is executed with Node.js and prints output to the terminal.
+
+In this lab, there is no web server or layered architecture yet — the focus is environment setup and running the first Node.js program.
+
+---
+
 # Control Questions
 
 ---
